@@ -1,5 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
-interface IUserMongoDB {
+export interface IUserMongoDB {
   _id: ObjectId;
   email: string;
   password: string;
