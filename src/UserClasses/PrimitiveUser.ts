@@ -5,8 +5,7 @@ export interface IUserMongoDB {
   password: string;
   uuid: string;
 }
-export class PrimitiveUser {
-  constructor() {}
+export abstract class PrimitiveUser {
   protected async checkUserExists(
     emailUser: string,
     client: MongoClient

@@ -18,7 +18,6 @@ export class LoginUser extends PrimitiveUser {
       .db("fish_base")
       .collection("Accounts")
       .findOne({ email: this.email })) as IUserMongoDB;
-    const boolCheck: boolean = compareSync(this.password, account.password);
     if (compareSync(this.password, account.password)) return account;
     else return null;
   }

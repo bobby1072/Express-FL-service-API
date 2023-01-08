@@ -7,7 +7,7 @@ var crypto = require("crypto");
 export class SubmitUser extends PrimitiveUser {
   public readonly email: string;
   public readonly password: string;
-  constructor(mailName: string, passworders: string, configg: ConfigVars) {
+  constructor(mailName: string, passworders: string) {
     super();
     const hash = hashSync(passworders, 12);
     this.email = mailName;
