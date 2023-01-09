@@ -6,11 +6,16 @@ export interface IUserMongoDB {
   uuid: string;
 }
 export abstract class PrimitiveUser {
+  public readonly client: MongoClient;
+  public readonly email: string;
+  constructor(mongoClient: MongoClient, mail: string) {
+    this.client = mongoClient;
+    this.email = mail.toLowerCase();
+  }
   protected async checkUserExists(
-    emailUser: string,
-    client: MongoClient
+    emailUser: string
   ): Promise<IUserMongoDB | null> {
-    const user = (await client
+    const user = (await this.client
       .db("fish_base")
       .collection("Accounts")
       .findOne({ email: emailUser })) as IUserMongoDB;

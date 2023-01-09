@@ -2,30 +2,42 @@ import { ConfigVars } from "../Utils/config-vars";
 import { MongoClient } from "mongodb";
 import { IUserMongoDB, PrimitiveUser } from "./PrimitiveUser";
 import { compareSync } from "bcryptjs";
+import { Token } from "../Utils/TokenClass";
+export interface ITokenAccountObj {
+  email: string;
+  id: string;
+  token: string;
+}
 export class LoginUser extends PrimitiveUser {
   public readonly configVars: ConfigVars;
-  public readonly email: string;
   public readonly password: string;
-  constructor(config: ConfigVars, mail: string, pass: string) {
-    super();
-    this.email = mail;
-    this.password = pass;
+  constructor(
+    config: ConfigVars,
+    mail: string,
+    pass: string,
+    mongoClient: MongoClient
+  ) {
+    super(mongoClient, mail);
     this.configVars = config;
+    this.password = pass;
     return this;
   }
-  public async login(client: MongoClient): Promise<null | IUserMongoDB> {
-    const account = (await client
-      .db("fish_base")
-      .collection("Accounts")
-      .findOne({ email: this.email })) as IUserMongoDB;
-    if (compareSync(this.password, account.password)) return account;
+  public async login(): Promise<null | ITokenAccountObj> {
+    const account = await this.checkUserExists(this.email);
+    if (!account) throw new Error("User doesn't Exist");
+    if (compareSync(this.password, account.password))
+      return {
+        email: account.email,
+        id: account.uuid,
+        token: new Token(this.configVars).encodeToken(account.email),
+      };
     else return null;
   }
-  public async deleteUser(client: MongoClient): Promise<void> {
-    if ((await this.login(client)) === null)
-      throw new Error("User doesn't exist");
+  public async deleteUser(): Promise<void> {
+    if ((await this.login()) === null)
+      throw new Error("User doesn't exist or password incorrect");
     else {
-      await client
+      await this.client
         .db("fish_base")
         .collection("Accounts")
         .deleteOne({ email: this.email });
