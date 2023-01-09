@@ -10,9 +10,18 @@ export class SubmitUser extends PrimitiveUser {
   constructor(mailName: string, passworders: string) {
     super();
     const hash = hashSync(passworders, 12);
-    this.email = mailName;
+    if (!this.validateEmail(mailName.toLowerCase()))
+      throw new Error("Invalid email given");
+    this.email = mailName.toLowerCase();
     this.password = hash;
     return this;
+  }
+  private validateEmail(email: string) {
+    return email
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
   }
   public async submitUser(client: MongoClient): Promise<void> {
     if ((await this.checkUserExists(this.email, client)) !== null)
