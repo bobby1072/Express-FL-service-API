@@ -7,8 +7,12 @@ export class Token {
   }
   public encodeToken(userName: string): string {
     const jwt: string = sign(
-      { user: userName, exp: Math.floor(new Date().getTime() / 1000) },
-      this.configVars.FISHLOGSK
+      {
+        user: userName,
+        exp: Math.round(Date.now() / 1000) + 3600,
+      },
+      this.configVars.FISHLOGSK,
+      { algorithm: "HS256" }
     );
     return jwt;
   }

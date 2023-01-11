@@ -5,6 +5,7 @@ import express, { Application, Request, Response } from "express";
 import bodyParser from "body-parser";
 import { ConfigVars } from "./Utils/config-vars";
 import { ITokenAccountObj, LoginUser } from "./UserClasses/LoginUserClass";
+import { Token } from "./Utils/TokenClass";
 async function main(): Promise<void> {
   const app: Application = express();
   app.use(cors());
@@ -53,6 +54,18 @@ async function main(): Promise<void> {
       resp.status(501);
       resp.send("Failed to connect to database or inncorrect email");
     }
+  });
+  app.post("/pullmycatches", async (req: Request, resp: Response) => {
+    if (!req.body.token) {
+      resp.status(422);
+      resp.send("No token included");
+    }
+    const token: string = req.body.token;
+    const tokenDetails = new Token(configVars).decodeToken(
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZGVtb0BkLmNvbSIsImV4cCI6MTY3MzM3MDI4MiwiaWF0IjoxNjczMzcwMjgyfQ.hapv_d4r38uMB21kBSYhY4Iz3hJhyhYTktBxgcvqm2s"
+    );
+    resp.status(200);
+    resp.send("Bruh");
   });
   //console.log(await new LoginUser(configVars, "yoi", "pass").login(client));
   //await new LoginUser(configVars, "yoi", "pass").deleteUser(client);
