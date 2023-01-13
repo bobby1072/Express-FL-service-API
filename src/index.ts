@@ -6,13 +6,18 @@ import bodyParser from "body-parser";
 import { ConfigVars } from "./Utils/config-vars";
 import { ITokenAccountObj, LoginUser } from "./UserClasses/LoginUserClass";
 import { Token } from "./Utils/TokenClass";
+import { MongoClient } from "mongodb";
+import FishLoadOperations from "./FishClasses/FishLoadClass";
 async function main(): Promise<void> {
   const app: Application = express();
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  const configVars = new ConfigVars();
-  const client = await new MongoConnector(configVars).connectToMongo();
+  const configVars: ConfigVars = new ConfigVars();
+  const mainTokenClass: Token = new Token(configVars);
+  const client: MongoClient = await new MongoConnector(
+    configVars
+  ).connectToMongo();
   app.post("/register", async (req: Request, resp: Response) => {
     if (!req.body.email || !req.body.password) {
       resp.status(422);
@@ -47,11 +52,11 @@ async function main(): Promise<void> {
         resp.status(200);
         resp.send(token);
       } else {
-        resp.status(501);
+        resp.status(500);
         resp.send("Password inncorect");
       }
     } catch (e) {
-      resp.status(501);
+      resp.status(500);
       resp.send("Failed to connect to database or inncorrect email");
     }
   });
@@ -61,11 +66,19 @@ async function main(): Promise<void> {
       resp.send("No token included");
     }
     const token: string = req.body.token;
-    const tokenDetails = new Token(configVars).decodeToken(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZGVtb0BkLmNvbSIsImV4cCI6MTY3MzM3MDI4MiwiaWF0IjoxNjczMzcwMjgyfQ.hapv_d4r38uMB21kBSYhY4Iz3hJhyhYTktBxgcvqm2s"
-    );
-    resp.status(200);
-    resp.send("Bruh");
+    try {
+      const tokenDetails = mainTokenClass.decodeToken(token);
+      const myCatches = await new FishLoadOperations(
+        configVars,
+        client,
+        tokenDetails.user
+      ).getOwnCatches();
+      resp.status(200);
+      resp.send(myCatches);
+    } catch (e) {
+      resp.status(500);
+      resp.send("Bad token given");
+    }
   });
   //console.log(await new LoginUser(configVars, "yoi", "pass").login(client));
   //await new LoginUser(configVars, "yoi", "pass").deleteUser(client);

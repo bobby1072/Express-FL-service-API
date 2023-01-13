@@ -5,7 +5,7 @@ import { PrimitiveFish } from "./PrimitiveFish";
 export interface IGeoJsonWithRecordId extends IGeoJson {
   recordId: number;
 }
-export class FishLoadOperation extends PrimitiveFish {
+class FishLoadOperations extends PrimitiveFish {
   constructor(config: ConfigVars, client: MongoClient, mail: string) {
     super(config, client, mail);
   }
@@ -19,12 +19,14 @@ export class FishLoadOperation extends PrimitiveFish {
       return newEle;
     });
   }
-  public async getOwnCatches() {
-    this.sortResult(
-      this.client
+  public async getOwnCatches(): Promise<IGeoJsonWithRecordId[]> {
+    return this.sortResult(
+      await this.client
         .db("fish_base")
         .collection("catch")
-        .find({ properties: { Username: this.email } })
+        .find({ "properties.Username": this.email })
+        .toArray()
     );
   }
 }
+export default FishLoadOperations;

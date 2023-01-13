@@ -1,5 +1,10 @@
 import { sign, verify, JwtPayload } from "jsonwebtoken";
 import { ConfigVars } from "./config-vars";
+interface ITokenData {
+  user: string;
+  iat: number;
+  exp: number;
+}
 export class Token {
   public readonly configVars: ConfigVars;
   constructor(config: ConfigVars) {
@@ -9,15 +14,14 @@ export class Token {
     const jwt: string = sign(
       {
         user: userName,
-        exp: Math.round(Date.now() / 1000) + 3600,
       },
       this.configVars.FISHLOGSK,
-      { algorithm: "HS256" }
+      { algorithm: "HS256", expiresIn: "1h" }
     );
     return jwt;
   }
-  public decodeToken(token: string): string | JwtPayload {
-    const decodedToken = verify(token, this.configVars.FISHLOGSK);
+  public decodeToken(token: string): ITokenData {
+    const decodedToken = verify(token, this.configVars.FISHLOGSK) as ITokenData;
     return decodedToken;
   }
 }
