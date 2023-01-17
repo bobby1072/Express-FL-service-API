@@ -9,18 +9,15 @@ export interface ITokenAccountObj {
   token: string;
 }
 export class LoginUser extends PrimitiveUser {
-  private readonly configVars: ConfigVars;
   public readonly password: string;
   public readonly token: Token;
   constructor(
-    config: ConfigVars,
     mail: string,
     pass: string,
     mongoClient: MongoClient,
     tokenClass: Token
   ) {
     super(mongoClient, mail);
-    this.configVars = config;
     this.password = pass;
     this.token = tokenClass;
     return this;

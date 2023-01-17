@@ -26,15 +26,16 @@ export class FishLogOperations extends PrimitiveFish {
   public readonly date: Date;
   constructor(username: string, catchObj: any, mongoClient: MongoClient) {
     super(mongoClient, username);
-    if (!this.isValidCatchBody(catchObj)) throw new Error("Invalid body given");
-    if (!this.isValidSpecies(catchObj.Species))
-      throw new Error("Invalid species given");
-    if (!this.isValidDate(catchObj.Date)) throw new Error("Invalid date given");
-    if (!this.isValidSeason(catchObj.Season))
-      throw new Error("Invalid Season given");
     if (!Number(catchObj.Weight)) throw new Error("Invalid weight given");
     if (!Number(catchObj.Latitude)) throw new Error("Invalid latitude given");
     if (!Number(catchObj.Longitude)) throw new Error("Invalid weight given");
+    if (!this.isValidCatchBody(catchObj)) throw new Error("Invalid body given");
+    if (!this.isValidDate(catchObj.Date.slice(0, 10)))
+      throw new Error("Invalid date given");
+    if (!this.isValidSpecies(catchObj.Species))
+      throw new Error("Invalid species given");
+    if (!this.isValidSeason(catchObj.Season))
+      throw new Error("Invalid Season given");
     this.species = catchObj.Species;
     this.weight = catchObj.Weight;
     this.latitude = catchObj.Latitude;
@@ -53,7 +54,7 @@ export class FishLogOperations extends PrimitiveFish {
     else return false;
   }
   private isValidSpecies(speciesName: string): boolean {
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    const alphabet = "abcdefghijklmnopqrstuvwxyz ";
     const capitalAlphabet = alphabet.toUpperCase();
     let valid = true;
     speciesName.split("").forEach((ele) => {
@@ -64,6 +65,7 @@ export class FishLogOperations extends PrimitiveFish {
   }
   private isValidCatchBody(catchObj: any): catchObj is IPullCatchReqBody {
     return (
+      "Username" in catchObj &&
       "Species" in catchObj &&
       "Weight" in catchObj &&
       "Latitude" in catchObj &&
