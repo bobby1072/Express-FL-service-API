@@ -19,8 +19,6 @@ export interface IGeoJson {
   properties: Properties;
 }
 export class FishLogOperations extends PrimitiveFish {
-  public readonly client: MongoClient;
-  public readonly email: string;
   public readonly species: string;
   public readonly weight: number;
   public readonly latitude: number;
@@ -38,13 +36,11 @@ export class FishLogOperations extends PrimitiveFish {
     config: ConfigVars,
     mongoClient: MongoClient
   ) {
-    super(config);
-    this.email = username;
+    super(config, mongoClient, username);
     this.species = species;
     this.weight = weight;
     this.latitude = latitude;
     this.longitude = longitude;
-    this.client = mongoClient;
     this.date = date;
     if (
       season === "Summer" ||

@@ -2,7 +2,6 @@ import { PrimitiveUser } from "./PrimitiveUser";
 import { MongoClient } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import { hashSync } from "bcryptjs";
-var crypto = require("crypto");
 export class SubmitUser extends PrimitiveUser {
   public readonly password: string;
   constructor(mailName: string, passworders: string, client: MongoClient) {
