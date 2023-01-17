@@ -1,13 +1,12 @@
-import { FindCursor, MongoClient, ObjectId, WithId } from "mongodb";
-import { ConfigVars } from "../Utils/config-vars";
+import { MongoClient } from "mongodb";
 import { IGeoJson } from "./FishLogClass";
 import { PrimitiveFish } from "./PrimitiveFish";
 export interface IGeoJsonWithRecordId extends IGeoJson {
   recordId: number;
 }
 class FishLoadOperations extends PrimitiveFish {
-  constructor(config: ConfigVars, client: MongoClient, mail: string) {
-    super(config, client, mail);
+  constructor(client: MongoClient, mail: string) {
+    super(client, mail);
   }
   private sortResult(geoJs: any) {
     let recordCount = 1;

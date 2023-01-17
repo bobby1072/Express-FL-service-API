@@ -9,6 +9,15 @@ import { Token } from "./Utils/TokenClass";
 import { MongoClient } from "mongodb";
 import FishLoadOperations from "./FishClasses/FishLoadClass";
 import compression from "compression";
+import { FishLogOperations } from "./FishClasses/FishLogClass";
+export interface IPullCatchReqBody {
+  Species: string;
+  Weight: number;
+  Latitude: number;
+  Longitude: number;
+  Season: string;
+  Date: string;
+}
 async function main(): Promise<void> {
   const app: Application = express();
   app.use(compression());
@@ -69,40 +78,12 @@ async function main(): Promise<void> {
       }
     }
   });
-  app.post("/pullmycatches", async (req: Request, resp: Response) => {
-    if (!req.body.token) {
-      resp.status(422);
-      resp.send("No token included");
-    } else {
-      const token: string = req.body.token;
-      try {
-        const tokenDetails = mainTokenClass.decodeToken(token);
-        try {
-          const myCatches = await new FishLoadOperations(
-            configVars,
-            client,
-            tokenDetails.user
-          ).getOwnCatches();
-          resp.status(200);
-          resp.send(myCatches);
-        } catch (e) {
-          let message = "Can't connect to database";
-          if (e instanceof Error) message = e.message;
-          resp.status(500);
-          resp.send(message);
-        }
-      } catch (e) {
-        resp.status(500);
-        resp.send("Bad token given");
-      }
-    }
-  });
   app.post("/deleteaccount", async (req: Request, resp: Response) => {
-    if (!req.body.token || !req.body.password) {
+    if (!req.headers.authorization || !req.body.password) {
       resp.status(422);
       resp.send("No token/password included");
     } else {
-      const token: string = req.body.token;
+      const token: string = req.headers.authorization;
       const password: string = req.body.password;
       try {
         const tokenDetails = mainTokenClass.decodeToken(token);
@@ -121,10 +102,63 @@ async function main(): Promise<void> {
           resp.send(message);
         }
       } catch (e) {
-        let message = "Bad token given";
-        if (e instanceof Error) message = e.message;
-        resp.status(500);
-        resp.send(message);
+        resp.status(498);
+        resp.send("Bad token given");
+      }
+    }
+  });
+  app.get("/pullmycatches", async (req: Request, resp: Response) => {
+    if (!req.headers.authorization) {
+      resp.status(498);
+      resp.send("No token included");
+    } else {
+      const token: string = req.headers.authorization;
+      try {
+        const tokenDetails = mainTokenClass.decodeToken(token);
+        try {
+          const myCatches = await new FishLoadOperations(
+            client,
+            tokenDetails.user
+          ).getOwnCatches();
+          resp.status(200);
+          resp.send(myCatches);
+        } catch (e) {
+          let message = "Can't connect to database";
+          if (e instanceof Error) message = e.message;
+          resp.status(500);
+          resp.send(message);
+        }
+      } catch (e) {
+        resp.status(498);
+        resp.send("Bad token given");
+      }
+    }
+  });
+  app.post("/postcatch", async (req: Request, resp: Response) => {
+    if (!req.headers.authorization) {
+      resp.status(498);
+      resp.send("No token included");
+    } else {
+      const token = req.headers.authorization;
+      try {
+        const tokenDetails = mainTokenClass.decodeToken(token);
+        try {
+          await new FishLogOperations(
+            tokenDetails.user,
+            req.body,
+            client
+          ).submitCatch();
+          resp.status(200);
+          resp.send("Catch submitted.");
+        } catch (e) {
+          let message = "Internal server Error";
+          if (e instanceof Error) message = e.message;
+          resp.status(500);
+          resp.send(message);
+        }
+      } catch (e) {
+        resp.status(498);
+        resp.send("Bad token given");
       }
     }
   });

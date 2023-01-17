@@ -1,4 +1,4 @@
-import { sign, verify, JwtPayload } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 import { ConfigVars } from "./config-vars";
 interface ITokenData {
   user: string;
@@ -6,7 +6,7 @@ interface ITokenData {
   exp: number;
 }
 export class Token {
-  public readonly configVars: ConfigVars;
+  private readonly configVars: ConfigVars;
   constructor(config: ConfigVars) {
     this.configVars = config;
   }
@@ -21,6 +21,7 @@ export class Token {
     return jwt;
   }
   public decodeToken(token: string): ITokenData {
+    if (token.includes("Bearer ")) token = token.replace("Bearer ", "");
     const decodedToken = verify(token, this.configVars.FISHLOGSK) as ITokenData;
     return decodedToken;
   }

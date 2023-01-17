@@ -1,6 +1,6 @@
 import { ConfigVars } from "../Utils/config-vars";
 import { MongoClient } from "mongodb";
-import { IUserMongoDB, PrimitiveUser } from "./PrimitiveUser";
+import { PrimitiveUser } from "./PrimitiveUser";
 import { compareSync } from "bcryptjs";
 import { Token } from "../Utils/TokenClass";
 export interface ITokenAccountObj {
@@ -9,7 +9,7 @@ export interface ITokenAccountObj {
   token: string;
 }
 export class LoginUser extends PrimitiveUser {
-  public readonly configVars: ConfigVars;
+  private readonly configVars: ConfigVars;
   public readonly password: string;
   public readonly token: Token;
   constructor(
