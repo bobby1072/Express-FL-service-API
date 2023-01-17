@@ -11,15 +11,18 @@ export interface ITokenAccountObj {
 export class LoginUser extends PrimitiveUser {
   public readonly configVars: ConfigVars;
   public readonly password: string;
+  public readonly token: Token;
   constructor(
     config: ConfigVars,
     mail: string,
     pass: string,
-    mongoClient: MongoClient
+    mongoClient: MongoClient,
+    tokenClass: Token
   ) {
     super(mongoClient, mail);
     this.configVars = config;
     this.password = pass;
+    this.token = tokenClass;
     return this;
   }
   public async login(): Promise<null | ITokenAccountObj> {
@@ -29,7 +32,7 @@ export class LoginUser extends PrimitiveUser {
       return {
         email: account.email,
         id: account.uuid,
-        token: new Token(this.configVars).encodeToken(account.email),
+        token: this.token.encodeToken(account.email),
       };
     else return null;
   }
