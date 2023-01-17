@@ -1,7 +1,7 @@
 import { ConfigVars } from "./config-vars";
 import { MongoClient } from "mongodb";
 export class MongoConnector {
-  public readonly configs: ConfigVars;
+  private readonly configs: ConfigVars;
   public readonly client: MongoClient;
   constructor(configVarObject: ConfigVars) {
     this.configs = configVarObject;
