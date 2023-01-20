@@ -1,8 +1,8 @@
-import { MongoClient } from "mongodb";
+import { Db } from "mongodb";
 export abstract class PrimitiveFish {
-  public readonly client: MongoClient;
+  public readonly client: Db;
   public readonly email: string;
-  constructor(mongoClient: MongoClient, user: string) {
+  constructor(mongoClient: Db, user: string) {
     this.client = mongoClient;
     this.email = user;
   }

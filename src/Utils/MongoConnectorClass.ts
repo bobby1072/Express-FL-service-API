@@ -1,5 +1,5 @@
 import { ConfigVars } from "./config-vars";
-import { MongoClient } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 export class MongoConnector {
   private readonly configs: ConfigVars;
   public readonly client: MongoClient;
@@ -8,10 +8,10 @@ export class MongoConnector {
     this.client = new MongoClient(this.configs.MONGODB_URI);
     return this;
   }
-  public async connectToMongo(): Promise<MongoClient> {
+  public async connectToMongo(): Promise<Db> {
     try {
       await this.client.connect();
-      return this.client;
+      return this.client.db("fish_base");
     } catch (error) {
       throw new Error(`Connection to mongo failed`);
     }

@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import { ConfigVars } from "./Utils/config-vars";
 import { ITokenAccountObj, LoginUser } from "./UserClasses/LoginUserClass";
 import { Token } from "./Utils/TokenClass";
-import { MongoClient } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 import FishLoadOperations from "./FishClasses/FishLoadClass";
 import compression from "compression";
 import { FishLogOperations } from "./FishClasses/FishLogClass";
@@ -28,7 +28,7 @@ async function main(): Promise<void> {
     const configVars: ConfigVars = new ConfigVars();
     const mainTokenClass: Token = new Token(configVars);
     const mongoConnector: MongoConnector = new MongoConnector(configVars);
-    const client: MongoClient = await mongoConnector.connectToMongo();
+    const client: Db = await mongoConnector.connectToMongo();
     app.post("/register", async (req: Request, resp: Response) => {
       if (!req.body.email || !req.body.password) {
         resp.status(422);

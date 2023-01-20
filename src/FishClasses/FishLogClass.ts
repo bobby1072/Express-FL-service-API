@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { Db } from "mongodb";
 import { IPullCatchReqBody } from "..";
 import { PrimitiveFish } from "./PrimitiveFish";
 interface Geometry {
@@ -24,11 +24,11 @@ export class FishLogOperations extends PrimitiveFish {
   public readonly longitude: number;
   public readonly Season: "Summer" | "Winter" | "Autumn" | "Spring";
   public readonly date: Date;
-  constructor(username: string, catchObj: any, mongoClient: MongoClient) {
+  constructor(username: string, catchObj: any, mongoClient: Db) {
     super(mongoClient, username);
     if (!Number(catchObj.Weight)) throw new Error("Invalid weight given");
     if (!Number(catchObj.Latitude)) throw new Error("Invalid latitude given");
-    if (!Number(catchObj.Longitude)) throw new Error("Invalid weight given");
+    if (!Number(catchObj.Longitude)) throw new Error("Invalid longitude given");
     if (!this.isValidCatchBody(catchObj)) throw new Error("Invalid body given");
     if (!this.isValidDate(catchObj.Date.slice(0, 10)))
       throw new Error("Invalid date given");
@@ -99,15 +99,9 @@ export class FishLogOperations extends PrimitiveFish {
     };
   }
   public async submitCatch(): Promise<void> {
-    await this.client
-      .db("fish_base")
-      .collection("catch")
-      .insertOne(this.createJson());
+    await this.client.collection("catch").insertOne(this.createJson());
   }
   public async deleteCatch(): Promise<void> {
-    await this.client
-      .db("fish_base")
-      .collection("catch")
-      .deleteOne(this.createJson());
+    await this.client.collection("catch").deleteOne(this.createJson());
   }
 }

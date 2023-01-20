@@ -1,10 +1,10 @@
 import { PrimitiveUser } from "./PrimitiveUser";
-import { MongoClient } from "mongodb";
+import { Db } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import { hashSync } from "bcryptjs";
 export class SubmitUser extends PrimitiveUser {
   public readonly password: string;
-  constructor(mailName: string, passworders: string, client: MongoClient) {
+  constructor(mailName: string, passworders: string, client: Db) {
     super(client, mailName);
     const hash = hashSync(passworders, 12);
     if (!this.validateEmail(mailName.toLowerCase()))
@@ -23,7 +23,7 @@ export class SubmitUser extends PrimitiveUser {
     if ((await this.checkUserExists(this.email)) !== null)
       throw new Error("User already exists");
     else {
-      await this.client.db("fish_base").collection("Accounts").insertOne({
+      await this.client.collection("Accounts").insertOne({
         uuid: uuidv4(),
         email: this.email,
         password: this.password,
