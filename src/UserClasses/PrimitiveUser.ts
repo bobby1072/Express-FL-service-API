@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { Db, ObjectId } from "mongodb";
 export interface IUserMongoDB {
   _id: ObjectId;
   email: string;
@@ -6,9 +6,9 @@ export interface IUserMongoDB {
   uuid: string;
 }
 export abstract class PrimitiveUser {
-  public readonly client: MongoClient;
+  public readonly client: Db;
   public readonly email: string;
-  constructor(mongoClient: MongoClient, mail: string) {
+  constructor(mongoClient: Db, mail: string) {
     this.client = mongoClient;
     this.email = mail.toLowerCase();
   }
@@ -16,7 +16,6 @@ export abstract class PrimitiveUser {
     emailUser: string
   ): Promise<IUserMongoDB | null> {
     const user = (await this.client
-      .db("fish_base")
       .collection("Accounts")
       .findOne({ email: emailUser })) as IUserMongoDB;
     return user;

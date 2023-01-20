@@ -1,11 +1,11 @@
-import { MongoClient } from "mongodb";
+import { Db } from "mongodb";
 import { IGeoJson } from "./FishLogClass";
 import { PrimitiveFish } from "./PrimitiveFish";
 export interface IGeoJsonWithRecordId extends IGeoJson {
   recordId: number;
 }
 class FishLoadOperations extends PrimitiveFish {
-  constructor(client: MongoClient, mail: string) {
+  constructor(client: Db, mail: string) {
     super(client, mail);
   }
   private sortResult(geoJs: any) {
@@ -21,7 +21,6 @@ class FishLoadOperations extends PrimitiveFish {
   public async getOwnCatches(): Promise<IGeoJsonWithRecordId[]> {
     return this.sortResult(
       await this.client
-        .db("fish_base")
         .collection("catch")
         .find({ "properties.Username": this.email })
         .toArray()

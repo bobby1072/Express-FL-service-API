@@ -1,5 +1,4 @@
-import { ConfigVars } from "../Utils/config-vars";
-import { MongoClient } from "mongodb";
+import { Db } from "mongodb";
 import { PrimitiveUser } from "./PrimitiveUser";
 import { compareSync } from "bcryptjs";
 import { Token } from "../Utils/TokenClass";
@@ -9,18 +8,10 @@ export interface ITokenAccountObj {
   token: string;
 }
 export class LoginUser extends PrimitiveUser {
-  private readonly configVars: ConfigVars;
   public readonly password: string;
   public readonly token: Token;
-  constructor(
-    config: ConfigVars,
-    mail: string,
-    pass: string,
-    mongoClient: MongoClient,
-    tokenClass: Token
-  ) {
+  constructor(mail: string, pass: string, mongoClient: Db, tokenClass: Token) {
     super(mongoClient, mail);
-    this.configVars = config;
     this.password = pass;
     this.token = tokenClass;
     return this;
@@ -40,10 +31,7 @@ export class LoginUser extends PrimitiveUser {
     if ((await this.login()) === null)
       throw new Error("User doesn't exist or password incorrect");
     else {
-      await this.client
-        .db("fish_base")
-        .collection("Accounts")
-        .deleteOne({ email: this.email });
+      await this.client.collection("Accounts").deleteOne({ email: this.email });
     }
   }
 }
