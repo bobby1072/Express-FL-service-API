@@ -105,7 +105,7 @@ async function main(): Promise<void> {
         }
       }
     });
-    app.get("/pullmycatches", async (req: Request, resp: Response) => {
+    app.post("/pullcatches", async (req: Request, resp: Response) => {
       if (!req.headers.authorization) {
         resp.status(498);
         resp.send("No token included");
@@ -117,7 +117,11 @@ async function main(): Promise<void> {
             const myCatches = await new FishLoadOperations(
               client,
               tokenDetails.user
-            ).getOwnCatches();
+            ).getCatches(
+              Object.keys(req.body).length !== 0 &&
+                typeof req.body === "object" &&
+                req.body
+            );
             resp.status(200);
             resp.send(myCatches);
           } catch (e) {

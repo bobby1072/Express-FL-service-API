@@ -1,13 +1,15 @@
-import { Db } from "mongodb";
 import { IGeoJson } from "./FishLogClass";
 import { PrimitiveFish } from "./PrimitiveFish";
 export interface IGeoJsonWithRecordId extends IGeoJson {
   recordId: number;
 }
+export interface IGetCatchesArgs {
+  "properties.Username"?: string;
+  "properties.Species"?: string;
+  "properties.Season"?: string;
+  "properties.Date"?: string;
+}
 class FishLoadOperations extends PrimitiveFish {
-  constructor(client: Db, mail: string) {
-    super(client, mail);
-  }
   private sortResult(geoJs: any) {
     let recordCount = 1;
     return geoJs.map((ele: any): IGeoJsonWithRecordId => {
@@ -18,11 +20,22 @@ class FishLoadOperations extends PrimitiveFish {
       return newEle;
     });
   }
-  public async getOwnCatches(): Promise<IGeoJsonWithRecordId[]> {
+  private validateOptions(options: any): options is IGetCatchesArgs {
+    return (
+      ("properties.Username" in options &&
+        options["properties.Username"] === this.email) ||
+      "properties.Species" in options ||
+      "properties.Season" in options ||
+      "properties.Date" in options
+    );
+  }
+  public async getCatches(options?: any): Promise<IGeoJsonWithRecordId[]> {
+    if (options && !this.validateOptions(options))
+      throw new Error("Please give valid search options");
     return this.sortResult(
       await this.client
         .collection("catch")
-        .find({ "properties.Username": this.email })
+        .find(options ? options : {})
         .toArray()
     );
   }
