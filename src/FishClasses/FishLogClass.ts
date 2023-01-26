@@ -65,7 +65,6 @@ export class FishLogOperations extends PrimitiveFish {
   }
   private isValidCatchBody(catchObj: any): catchObj is IPullCatchReqBody {
     return (
-      "Username" in catchObj &&
       "Species" in catchObj &&
       "Weight" in catchObj &&
       "Latitude" in catchObj &&
