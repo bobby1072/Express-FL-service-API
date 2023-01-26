@@ -31,6 +31,9 @@ export class LoginUser extends PrimitiveUser {
     if ((await this.login()) === null)
       throw new Error("User doesn't exist or password incorrect");
     else {
+      await this.client
+        .collection("catch")
+        .deleteMany({ "properties.Username": this.email });
       await this.client.collection("Accounts").deleteOne({ email: this.email });
     }
   }
