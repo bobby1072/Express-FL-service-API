@@ -1,5 +1,5 @@
 import { MongoConnector } from "./Utils/MongoConnectorClass";
-import { SubmitUser } from "./UserClasses/SuBmitUserClass";
+import { SubmitUser } from "./UserClasses/SubmitUserClass";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import bodyParser from "body-parser";
