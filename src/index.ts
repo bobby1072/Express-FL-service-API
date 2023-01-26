@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import { ConfigVars } from "./Utils/config-vars";
 import { ITokenAccountObj, LoginUser } from "./UserClasses/LoginUserClass";
 import { Token } from "./Utils/TokenClass";
-import { Db, MongoClient } from "mongodb";
+import { Db } from "mongodb";
 import FishLoadOperations from "./FishClasses/FishLoadClass";
 import compression from "compression";
 import { FishLogOperations } from "./FishClasses/FishLogClass";
@@ -93,6 +93,8 @@ async function main(): Promise<void> {
               client,
               mainTokenClass
             ).deleteUser();
+            resp.status(200);
+            resp.send("Account deleted");
           } catch (e) {
             let message = "Internal server error";
             if (e instanceof Error) message = e.message;

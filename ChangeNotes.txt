@@ -1,4 +1,5 @@
 pull ctaches has changed.
      - it uses options dict now
      - pullall and pullmy and pullsome have all changed.
- 
+
+- token needs to be in auth headers.
