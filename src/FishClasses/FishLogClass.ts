@@ -1,6 +1,14 @@
 import { Db } from "mongodb";
 import { IPullCatchReqBody } from "..";
+import allFish from "./allFish.json";
 import { PrimitiveFish } from "./PrimitiveFish";
+interface Ifish {
+  scientific_name: string;
+  taxocode: string;
+  a3_code: string;
+  isscaap: number;
+  english_name: string;
+}
 interface Geometry {
   type: string;
   coordinates: number[];
@@ -24,6 +32,7 @@ export class FishLogOperations extends PrimitiveFish {
   public readonly longitude: number;
   public readonly Season: "Summer" | "Winter" | "Autumn" | "Spring";
   public readonly date: Date;
+  private readonly fishData: Ifish[] = allFish;
   constructor(username: string, catchObj: any, mongoClient: Db) {
     super(mongoClient, username);
     if (!Number(catchObj.Weight)) throw new Error("Invalid weight given");
@@ -61,6 +70,15 @@ export class FishLogOperations extends PrimitiveFish {
       if (!alphabet.includes(ele) && !capitalAlphabet.includes(ele))
         valid = false;
     });
+    const foundFish: Ifish | undefined = this.fishData.find(
+      (fishEle: Ifish) => {
+        return (
+          fishEle.english_name.toLowerCase() === speciesName.toLowerCase() ||
+          fishEle.scientific_name.toLowerCase() === speciesName.toLowerCase()
+        );
+      }
+    );
+    if (!foundFish) valid = false;
     return valid;
   }
   private isValidCatchBody(catchObj: any): catchObj is IPullCatchReqBody {
