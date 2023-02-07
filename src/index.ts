@@ -25,10 +25,7 @@ async function main(): Promise<void> {
     app.use(cors());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
-    const configVars: ConfigVars = new ConfigVars();
-    const mainTokenClass: Token = new Token(configVars);
-    const mongoConnector: MongoConnector = new MongoConnector(configVars);
-    const client: Db = await mongoConnector.connectToMongo();
+    const client: Db = await MongoConnector.connectToMongo();
     app.post("/register", async (req: Request, resp: Response) => {
       if (!req.body.email || !req.body.password) {
         resp.status(422);
@@ -59,8 +56,7 @@ async function main(): Promise<void> {
           const token: ITokenAccountObj | null = await new LoginUser(
             email,
             pass,
-            client,
-            mainTokenClass
+            client
           ).login();
           if (token) {
             resp.status(200);
@@ -85,13 +81,12 @@ async function main(): Promise<void> {
         const token: string = req.headers.authorization;
         const password: string = req.body.password;
         try {
-          const tokenDetails = mainTokenClass.decodeToken(token);
+          const tokenDetails = Token.decodeToken(token);
           try {
             await new LoginUser(
               tokenDetails.user,
               password,
-              client,
-              mainTokenClass
+              client
             ).deleteUser();
             resp.status(200);
             resp.send("Account deleted");
@@ -114,7 +109,7 @@ async function main(): Promise<void> {
       } else {
         const token: string = req.headers.authorization;
         try {
-          const tokenDetails = mainTokenClass.decodeToken(token);
+          const tokenDetails = Token.decodeToken(token);
           try {
             const myCatches = await new FishLoadOperations(
               client,
@@ -145,7 +140,7 @@ async function main(): Promise<void> {
       } else {
         const token = req.headers.authorization;
         try {
-          const tokenDetails = mainTokenClass.decodeToken(token);
+          const tokenDetails = Token.decodeToken(token);
           try {
             await new FishLogOperations(
               tokenDetails.user,
@@ -173,7 +168,7 @@ async function main(): Promise<void> {
       } else {
         const token: string = req.headers.authorization;
         try {
-          const tokenDetails = mainTokenClass.decodeToken(token);
+          const tokenDetails = Token.decodeToken(token);
           try {
             if (!Array.isArray(req.body))
               throw new Error("Please provide valid Array to delete");

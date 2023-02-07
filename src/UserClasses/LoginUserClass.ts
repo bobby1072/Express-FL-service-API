@@ -9,11 +9,9 @@ export interface ITokenAccountObj {
 }
 export class LoginUser extends PrimitiveUser {
   public readonly password: string;
-  public readonly token: Token;
-  constructor(mail: string, pass: string, mongoClient: Db, tokenClass: Token) {
+  constructor(mail: string, pass: string, mongoClient: Db) {
     super(mongoClient, mail);
     this.password = pass;
-    this.token = tokenClass;
     return this;
   }
   public async login(): Promise<null | ITokenAccountObj> {
@@ -23,7 +21,7 @@ export class LoginUser extends PrimitiveUser {
       return {
         email: account.email,
         id: account.uuid,
-        token: this.token.encodeToken(account.email),
+        token: Token.encodeToken(account.email),
       };
     else return null;
   }

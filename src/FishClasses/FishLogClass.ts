@@ -31,7 +31,7 @@ export class FishLogOperations extends PrimitiveFish {
   public readonly latitude: number;
   public readonly longitude: number;
   public readonly Season: "Summer" | "Winter" | "Autumn" | "Spring";
-  public readonly date: Date;
+  public readonly date: string;
   private readonly fishData: Ifish[] = allFish;
   constructor(username: string, catchObj: any, mongoClient: Db) {
     super(mongoClient, username);
@@ -49,7 +49,7 @@ export class FishLogOperations extends PrimitiveFish {
     this.weight = catchObj.Weight;
     this.latitude = catchObj.Latitude;
     this.longitude = catchObj.Longitude;
-    this.date = new Date(catchObj.Date);
+    this.date = new Date(catchObj.Date).toISOString().slice(0, 10);
     this.Season = catchObj.Season as "Summer" | "Winter" | "Autumn" | "Spring";
   }
   private isValidSeason(seas: string): boolean {
@@ -111,7 +111,7 @@ export class FishLogOperations extends PrimitiveFish {
         Species: this.species,
         Weight: this.weight,
         Season: this.Season,
-        Date: this.date.toISOString(),
+        Date: this.date,
       },
     };
   }

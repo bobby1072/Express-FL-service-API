@@ -5,24 +5,20 @@ interface ITokenData {
   iat: number;
   exp: number;
 }
-export class Token {
-  private readonly configVars: ConfigVars;
-  constructor(config: ConfigVars) {
-    this.configVars = config;
-  }
-  public encodeToken(userName: string): string {
+export abstract class Token {
+  public static encodeToken(userName: string): string {
     const jwt: string = sign(
       {
         user: userName,
       },
-      this.configVars.FISHLOGSK,
+      ConfigVars.FISHLOGSK,
       { algorithm: "HS256", expiresIn: "1h" }
     );
     return jwt;
   }
-  public decodeToken(token: string): ITokenData {
+  public static decodeToken(token: string): ITokenData {
     if (token.includes("Bearer ")) token = token.replace("Bearer ", "");
-    const decodedToken = verify(token, this.configVars.FISHLOGSK) as ITokenData;
+    const decodedToken = verify(token, ConfigVars.FISHLOGSK) as ITokenData;
     return decodedToken;
   }
 }
