@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+
 export abstract class ConfigVars {
   private static getVars(varKey: string): string {
     dotenv.config();
