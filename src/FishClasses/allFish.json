@@ -2398,7 +2398,7 @@
     "taxocode": "1090101008",
     "a3_code": "ETM",
     "isscaap": 38,
-    "english_name": "Southern lanternshark(Lucifer)"
+    "english_name": "Southern lanternshark "
   },
   {
     "scientific_name": "Etmopterus hillianus",
@@ -6318,7 +6318,7 @@
     "taxocode": "1170100102",
     "a3_code": "APG",
     "isscaap": 21,
-    "english_name": "Danube sturgeon(=Osetr)"
+    "english_name": "Danube sturgeon "
   },
   {
     "scientific_name": "Acipenser naccarii",
@@ -7319,7 +7319,7 @@
     "taxocode": "1210506401",
     "a3_code": "PIL",
     "isscaap": 35,
-    "english_name": "European pilchard(=Sardine)"
+    "english_name": "European pilchard "
   },
   {
     "scientific_name": "Gilchristella aestuarius",
@@ -7571,7 +7571,7 @@
     "taxocode": "1210600208",
     "a3_code": "VET",
     "isscaap": 35,
-    "english_name": "Anchoveta(=Peruvian anchovy)"
+    "english_name": "Anchoveta "
   },
   {
     "scientific_name": "Engraulis capensis",
@@ -8432,14 +8432,14 @@
     "taxocode": "1230100902",
     "a3_code": "PIN",
     "isscaap": 23,
-    "english_name": "Pink(=Humpback)salmon"
+    "english_name": "Pink salmon"
   },
   {
     "scientific_name": "Oncorhynchus keta",
     "taxocode": "1230100903",
     "a3_code": "CHU",
     "isscaap": 23,
-    "english_name": "Chum(=Keta=Dog)salmon"
+    "english_name": "Chum salmon"
   },
   {
     "scientific_name": "Oncorhynchus clarki",
@@ -8453,28 +8453,28 @@
     "taxocode": "1230100905",
     "a3_code": "CHE",
     "isscaap": 23,
-    "english_name": "Masu(=Cherry) salmon"
+    "english_name": "Masu  salmon"
   },
   {
     "scientific_name": "Oncorhynchus nerka",
     "taxocode": "1230100906",
     "a3_code": "SOC",
     "isscaap": 23,
-    "english_name": "Sockeye(=Red)salmon"
+    "english_name": "Sockeye salmon"
   },
   {
     "scientific_name": "Oncorhynchus tshawytscha",
     "taxocode": "1230100907",
     "a3_code": "CHI",
     "isscaap": 23,
-    "english_name": "Chinook(=Spring=King)salmon"
+    "english_name": "Chinook salmon"
   },
   {
     "scientific_name": "Oncorhynchus kisutch",
     "taxocode": "1230100908",
     "a3_code": "COH",
     "isscaap": 23,
-    "english_name": "Coho(=Silver)salmon"
+    "english_name": "Coho salmon"
   },
   {
     "scientific_name": "Oncorhynchus mykiss",
@@ -8558,7 +8558,7 @@
     "taxocode": "1230101007",
     "a3_code": "LAT",
     "isscaap": 23,
-    "english_name": "Lake trout(=Char)"
+    "english_name": "Lake trout "
   },
   {
     "scientific_name": "Salvelinus confluentus",
@@ -9006,7 +9006,7 @@
     "taxocode": "1231200112",
     "a3_code": "WHL",
     "isscaap": 23,
-    "english_name": "Lake(=Common)whitefish"
+    "english_name": "Lake whitefish"
   },
   {
     "scientific_name": "Coregonus artedi",
@@ -13794,7 +13794,7 @@
     "taxocode": "1400202001",
     "a3_code": "FID",
     "isscaap": 11,
-    "english_name": "Orfe(=Ide)"
+    "english_name": "Orfe "
   },
   {
     "scientific_name": "Leuciscus cephaloides",
@@ -14214,7 +14214,7 @@
     "taxocode": "1400203501",
     "a3_code": "FCG",
     "isscaap": 11,
-    "english_name": "Grass carp(=White amur)"
+    "english_name": "Grass carp "
   },
   {
     "scientific_name": "Cyclocheilichthys enoplos",
@@ -18232,7 +18232,7 @@
     "taxocode": "1410703101",
     "a3_code": "SOM",
     "isscaap": 13,
-    "english_name": "Wels(=Som)catfish"
+    "english_name": "Wels catfish"
   },
   {
     "scientific_name": "Silurus asotus",
@@ -23230,7 +23230,7 @@
     "taxocode": "1480400101",
     "a3_code": "USK",
     "isscaap": 32,
-    "english_name": "Tusk(=Cusk)"
+    "english_name": "Tusk "
   },
   {
     "scientific_name": "Gadus morhua",
@@ -23398,7 +23398,7 @@
     "taxocode": "1480401201",
     "a3_code": "COW",
     "isscaap": 32,
-    "english_name": "Navaga(=Wachna cod)"
+    "english_name": "Navaga "
   },
   {
     "scientific_name": "Eleginus gracilis",
@@ -23426,7 +23426,7 @@
     "taxocode": "1480401501",
     "a3_code": "POK",
     "isscaap": 32,
-    "english_name": "Saithe(=Pollock)"
+    "english_name": "Saithe "
   },
   {
     "scientific_name": "Pollachius pollachius",
@@ -23440,7 +23440,7 @@
     "taxocode": "1480401601",
     "a3_code": "ALK",
     "isscaap": 32,
-    "english_name": "Alaska pollock(=Walleye poll.)"
+    "english_name": "Alaska pollock "
   },
   {
     "scientific_name": "Theragra finnmarchica",
@@ -23566,7 +23566,7 @@
     "taxocode": "1480403203",
     "a3_code": "BIB",
     "isscaap": 32,
-    "english_name": "Pouting(=Bib)"
+    "english_name": "Pouting "
   },
   {
     "scientific_name": "Trisopterus spp",
@@ -23580,7 +23580,7 @@
     "taxocode": "1480403301",
     "a3_code": "WHB",
     "isscaap": 32,
-    "english_name": "Blue whiting(=Poutassou)"
+    "english_name": "Blue whiting "
   },
   {
     "scientific_name": "Micromesistius australis",
@@ -27815,7 +27815,7 @@
     "taxocode": "16302XXXXX",
     "a3_code": "SIL",
     "isscaap": 37,
-    "english_name": "Silversides(=Sand smelts) nei"
+    "english_name": "Silversides  nei"
   },
   {
     "scientific_name": "Bedotia geayi",
@@ -28046,7 +28046,7 @@
     "taxocode": "1650100204",
     "a3_code": "SOY",
     "isscaap": 33,
-    "english_name": "So-iny (redlip) mullet"
+    "english_name": "So-iny   mullet"
   },
   {
     "scientific_name": "Aldrichetta forsteri",
@@ -28557,14 +28557,14 @@
     "taxocode": "17001025XX",
     "a3_code": "ROB",
     "isscaap": 33,
-    "english_name": "Snooks(=Robalos) nei"
+    "english_name": "Snooks  nei"
   },
   {
     "scientific_name": "Lates calcarifer",
     "taxocode": "1700116701",
     "a3_code": "GIP",
     "isscaap": 25,
-    "english_name": "Barramundi(=Giant seaperch)"
+    "english_name": "Barramundi "
   },
   {
     "scientific_name": "Lates angustifrons",
@@ -33471,7 +33471,7 @@
     "taxocode": "17035169XX",
     "a3_code": "POY",
     "isscaap": 33,
-    "english_name": "Ponyfishes(=Slipmouths)"
+    "english_name": "Ponyfishes "
   },
   {
     "scientific_name": "Secutor insidiator",
@@ -33499,7 +33499,7 @@
     "taxocode": "17035XXXXX",
     "a3_code": "PON",
     "isscaap": 33,
-    "english_name": "Ponyfishes(=Slipmouths) nei"
+    "english_name": "Ponyfishes  nei"
   },
   {
     "scientific_name": "Boridia grossidens",
@@ -34143,7 +34143,7 @@
     "taxocode": "1703701614",
     "a3_code": "STG",
     "isscaap": 33,
-    "english_name": "Squeteague(=Gray weakfish)"
+    "english_name": "Squeteague "
   },
   {
     "scientific_name": "Cynoscion reticulatus",
@@ -34255,7 +34255,7 @@
     "taxocode": "1703702801",
     "a3_code": "MIH",
     "isscaap": 33,
-    "english_name": "Mi-iuy (brown) croaker"
+    "english_name": "Mi-iuy   croaker"
   },
   {
     "scientific_name": "Miracorvina angolensis",
@@ -34437,7 +34437,7 @@
     "taxocode": "1703707009",
     "a3_code": "UCA",
     "isscaap": 33,
-    "english_name": "Canary drum(=Baardman)"
+    "english_name": "Canary drum "
   },
   {
     "scientific_name": "Umbrina ronchus",
@@ -34535,7 +34535,7 @@
     "taxocode": "1703710606",
     "a3_code": "KOB",
     "isscaap": 33,
-    "english_name": "Southern meagre(=Mulloway)"
+    "english_name": "Southern meagre "
   },
   {
     "scientific_name": "Argyrosomus thorpei",
@@ -35333,7 +35333,7 @@
     "taxocode": "17038XXXXX",
     "a3_code": "EMP",
     "isscaap": 33,
-    "english_name": "Emperors(=Scavengers) nei"
+    "english_name": "Emperors  nei"
   },
   {
     "scientific_name": "Boopsoidea inornata",
@@ -35361,7 +35361,7 @@
     "taxocode": "1703900801",
     "a3_code": "SBR",
     "isscaap": 33,
-    "english_name": "Blackspot(=red) seabream"
+    "english_name": "Blackspot  seabream"
   },
   {
     "scientific_name": "Pagellus erythrinus",
@@ -35893,7 +35893,7 @@
     "taxocode": "17039285XX",
     "a3_code": "CPP",
     "isscaap": 33,
-    "english_name": "Copper breams(=Hottentots) nei"
+    "english_name": "Copper breams  nei"
   },
   {
     "scientific_name": "Polysteganus praeorbitalis",
@@ -36110,7 +36110,7 @@
     "taxocode": "17041007XX",
     "a3_code": "MUX",
     "isscaap": 33,
-    "english_name": "Surmullets(=Red mullets) nei"
+    "english_name": "Surmullets  nei"
   },
   {
     "scientific_name": "Mulloidichthys flavolineatus",
@@ -36474,7 +36474,7 @@
     "taxocode": "17046036XX",
     "a3_code": "MOJ",
     "isscaap": 33,
-    "english_name": "Mojarras(=Silver-biddies) nei"
+    "english_name": "Mojarras  nei"
   },
   {
     "scientific_name": "Diapterus auratus",
@@ -42186,7 +42186,7 @@
     "taxocode": "17102001XX",
     "a3_code": "CAT",
     "isscaap": 34,
-    "english_name": "Wolffishes(=Catfishes) nei"
+    "english_name": "Wolffishes  nei"
   },
   {
     "scientific_name": "Anarrhichthys ocellatus",
@@ -42963,7 +42963,7 @@
     "taxocode": "17204002XX",
     "a3_code": "SAN",
     "isscaap": 33,
-    "english_name": "Sandeels(=Sandlances) nei"
+    "english_name": "Sandeels  nei"
   },
   {
     "scientific_name": "Ammodytoides renniei",
@@ -45819,7 +45819,7 @@
     "taxocode": "17407001XX",
     "a3_code": "SPI",
     "isscaap": 33,
-    "english_name": "Spinefeet(=Rabbitfishes) nei"
+    "english_name": "Spinefeet  nei"
   },
   {
     "scientific_name": "Luvarus imperialis",
@@ -46134,7 +46134,7 @@
     "taxocode": "1750102401",
     "a3_code": "LTA",
     "isscaap": 36,
-    "english_name": "Little tunny(=Atl.black skipj)"
+    "english_name": "Little tunny "
   },
   {
     "scientific_name": "Euthynnus lineatus",
@@ -48143,7 +48143,7 @@
     "taxocode": "17719001XX",
     "a3_code": "FSN",
     "isscaap": 13,
-    "english_name": "Snakeheads(=Murrels) nei"
+    "english_name": "Snakeheads  nei"
   },
   {
     "scientific_name": "Parachanna africana",
@@ -49445,7 +49445,7 @@
     "taxocode": "1780202501",
     "a3_code": "BEG",
     "isscaap": 34,
-    "english_name": "Latchet(=Sharpbeak gurnard)"
+    "english_name": "Latchet "
   },
   {
     "scientific_name": "Pterygotrigla picta",
@@ -50523,7 +50523,7 @@
     "taxocode": "1782000301",
     "a3_code": "LUM",
     "isscaap": 34,
-    "english_name": "Lumpfish(=Lumpsucker)"
+    "english_name": "Lumpfish "
   },
   {
     "scientific_name": "Cyclopteropsis lindbergi",
@@ -51594,7 +51594,7 @@
     "taxocode": "1830201401",
     "a3_code": "PLA",
     "isscaap": 31,
-    "english_name": "Amer. plaice(=Long rough dab)"
+    "english_name": "Amer. plaice "
   },
   {
     "scientific_name": "Hippoglossoides dubius",
@@ -54527,7 +54527,7 @@
     "taxocode": "1950100101",
     "a3_code": "MON",
     "isscaap": 34,
-    "english_name": "Angler(=Monk)"
+    "english_name": "Angler "
   },
   {
     "scientific_name": "Lophius budegassa",
@@ -69206,7 +69206,7 @@
     "taxocode": "3161107501",
     "a3_code": "CLH",
     "isscaap": 56,
-    "english_name": "Northern quahog(=Hard clam)"
+    "english_name": "Northern quahog "
   },
   {
     "scientific_name": "Mercenaria campechiensis",
@@ -70158,7 +70158,7 @@
     "taxocode": "3161600502",
     "a3_code": "CLR",
     "isscaap": 56,
-    "english_name": "Atl.jackknife(=Atl.razor clam)"
+    "english_name": "Atl.jackknife "
   },
   {
     "scientific_name": "Ensis ensis",
@@ -80392,7 +80392,7 @@
     "taxocode": "7871600104",
     "a3_code": "IMS",
     "isscaap": 92,
-    "english_name": "Carragheen (Irish) moss"
+    "english_name": "Carragheen   moss"
   },
   {
     "scientific_name": "Gigartina skottsbergii",
@@ -80511,7 +80511,7 @@
     "taxocode": "7872000208",
     "a3_code": "PRT",
     "isscaap": 92,
-    "english_name": "Laver (Nori)"
+    "english_name": "Laver  "
   },
   {
     "scientific_name": "Porphyra perforata",
