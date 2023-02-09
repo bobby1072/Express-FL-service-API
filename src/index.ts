@@ -3,7 +3,6 @@ import { SubmitUser } from "./UserClasses/SubmitUserClass";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import bodyParser from "body-parser";
-import { ConfigVars } from "./Utils/config-vars";
 import { ITokenAccountObj, LoginUser } from "./UserClasses/LoginUserClass";
 import { Token } from "./Utils/TokenClass";
 import { Db } from "mongodb";

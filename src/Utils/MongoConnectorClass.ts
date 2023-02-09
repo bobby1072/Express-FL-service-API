@@ -1,6 +1,6 @@
 import { ConfigVars } from "./config-vars";
 import { Db, MongoClient } from "mongodb";
-export class MongoConnector {
+export abstract class MongoConnector {
   private static client: MongoClient = new MongoClient(ConfigVars.MONGODB_URI);
   public static async connectToMongo(): Promise<Db> {
     try {
