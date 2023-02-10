@@ -33992,7 +33992,7 @@
     "english_name": "Wavyline grunt"
   },
   {
-    "scientific_name": "Haemulidae(=Pomadasyidae)",
+    "scientific_name": "Haemulidae",
     "taxocode": "17036XXXXX",
     "a3_code": "GRX",
     "isscaap": 33,
@@ -37597,7 +37597,7 @@
     "english_name": ""
   },
   {
-    "scientific_name": "Oreochromis(=Tilapia) spp",
+    "scientific_name": "Oreochromis spp",
     "taxocode": "17059051XX",
     "a3_code": "TLP",
     "isscaap": 12,
@@ -53788,7 +53788,7 @@
     "english_name": "Sandwich isle file"
   },
   {
-    "scientific_name": "Cantherhines(=Navodon) spp",
+    "scientific_name": "Cantherhines spp",
     "taxocode": "19009004XX",
     "a3_code": "FLF",
     "isscaap": 33,
@@ -55055,14 +55055,14 @@
     "english_name": "Diadromous fishes nei"
   },
   {
-    "scientific_name": "Batoidimorpha(Hypotremata)",
+    "scientific_name": "Batoidimorpha",
     "taxocode": "199XXXXXXX052",
     "a3_code": "BAI",
     "isscaap": 38,
     "english_name": "Batoid fishes nei"
   },
   {
-    "scientific_name": "Selachimorpha(Pleurotremata)",
+    "scientific_name": "Selachimorpha",
     "taxocode": "199XXXXXXX053",
     "a3_code": "SKH",
     "isscaap": 38,
