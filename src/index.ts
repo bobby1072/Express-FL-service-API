@@ -13,7 +13,7 @@ import {
   FishOpErrors,
   Ifish,
 } from "./FishClasses/FishLogClass";
-import { AllFishOperations } from "./Utils/AllFishSearch";
+import { ExceptionMessage } from "./Utils/ExceptionMessages";
 export interface IPullCatchReqBody {
   Species: string;
   Weight: number;
@@ -43,7 +43,7 @@ abstract class Program {
             resp.status(200);
             resp.send("Account created");
           } catch (e) {
-            let message = "Internal server error";
+            let message = ExceptionMessage.internalServerError;
             if (e instanceof Error) message = e.message;
             resp.status(500);
             resp.send(message);
@@ -71,7 +71,7 @@ abstract class Program {
               resp.send("Password inncorect");
             }
           } catch (e) {
-            let message = "Internal server error";
+            let message = ExceptionMessage.internalServerError;
             if (e instanceof Error) message = e.message;
             resp.status(500);
             resp.send(message);
@@ -96,7 +96,7 @@ abstract class Program {
               resp.status(200);
               resp.send("Account deleted");
             } catch (e) {
-              let message = "Internal server error";
+              let message = ExceptionMessage.internalServerError;
               if (e instanceof Error) message = e.message;
               resp.status(500);
               resp.send(message);
@@ -127,7 +127,7 @@ abstract class Program {
               resp.status(200);
               resp.send(myCatches);
             } catch (e) {
-              let message = "Internal server error";
+              let message = ExceptionMessage.internalServerError;
               if (e instanceof Error) message = e.message;
               resp.status(500);
               resp.send(message);
@@ -155,14 +155,14 @@ abstract class Program {
               resp.status(200);
               resp.send("Catch submitted.");
             } catch (e) {
-              let message = "Internal server error";
+              let message = ExceptionMessage.internalServerError;
               if (e instanceof FishOpErrors) {
                 message = e.message;
                 if (e.similarFish && e.similarFish.length > 0) {
                   resp.status(500);
                   resp.send(
                     `${message}. Did you mean ${e.similarFish
-                      .map((ele: Ifish, index: number) => ele.english_name)
+                      .map((ele: Ifish) => ele.english_name)
                       .join(" or ")}`
                   );
                 }
@@ -186,13 +186,11 @@ abstract class Program {
             const tokenDetails = Token.decodeToken(token);
             try {
               if (!Array.isArray(req.body))
-                throw new Error("Please provide valid Array to delete");
+                throw new Error(ExceptionMessage.invalidDeleteArray);
               await Promise.all(
                 req.body.map((ele) => {
                   if (!("properties" in ele) || !("geometry" in ele))
-                    throw new Error(
-                      "Please provide valid GeoJson catches to delete"
-                    );
+                    throw new Error(ExceptionMessage.invalidGeoJson);
                   const newEle = ele.properties;
                   newEle.Latitude = ele.geometry.coordinates[0];
                   newEle.Longitude = ele.geometry.coordinates[1];
@@ -206,7 +204,7 @@ abstract class Program {
               resp.status(200);
               resp.send("Catches deleted");
             } catch (e) {
-              let message = "Internal server error";
+              let message = ExceptionMessage.internalServerError;
               if (e instanceof Error) message = e.message;
               resp.status(500);
               resp.send(message);

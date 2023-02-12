@@ -1,6 +1,7 @@
 import { Db } from "mongodb";
 import { IPullCatchReqBody } from "..";
 import { AllFishOperations } from "../Utils/AllFishSearch";
+import { ExceptionMessage } from "../Utils/ExceptionMessages";
 import allFish from "./allFish.json";
 import { PrimitiveFish } from "./PrimitiveFish";
 export interface Ifish {
@@ -44,22 +45,22 @@ export class FishLogOperations extends PrimitiveFish {
   constructor(username: string, catchObj: any, mongoClient: Db) {
     super(mongoClient, username);
     if (!this.isValidCatchBody(catchObj))
-      throw new FishOpErrors("Invalid body given");
+      throw new FishOpErrors(ExceptionMessage.invalidBody);
     if (!Number(catchObj.Weight))
-      throw new FishOpErrors("Invalid weight given");
+      throw new FishOpErrors(ExceptionMessage.invalidWeight);
     if (!Number(catchObj.Latitude))
-      throw new FishOpErrors("Invalid latitude given");
+      throw new FishOpErrors(ExceptionMessage.invalidLatitude);
     if (!Number(catchObj.Longitude))
-      throw new FishOpErrors("Invalid longitude given");
+      throw new FishOpErrors(ExceptionMessage.invalidLongitude);
     if (!this.isValidDate(catchObj.Date.slice(0, 10)))
-      throw new FishOpErrors("Invalid date given");
+      throw new FishOpErrors(ExceptionMessage.invalidDate);
     if (!this.isValidSpecies(catchObj.Species))
       throw new FishOpErrors(
-        "Invalid species given",
+        ExceptionMessage.invalidSpecies,
         AllFishOperations.FindSimilarFish(catchObj.Species)
       );
     if (!this.isValidSeason(catchObj.Season))
-      throw new FishOpErrors("Invalid Season given");
+      throw new FishOpErrors(ExceptionMessage.invalidSeason);
     this.species = catchObj.Species;
     this.weight = catchObj.Weight;
     this.latitude = catchObj.Latitude;

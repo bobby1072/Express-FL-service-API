@@ -2,13 +2,14 @@ import { PrimitiveUser } from "./PrimitiveUser";
 import { Db } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
 import { hashSync } from "bcryptjs";
+import { ExceptionMessage } from "../Utils/ExceptionMessages";
 export class SubmitUser extends PrimitiveUser {
   public readonly password: string;
   constructor(mailName: string, passworders: string, client: Db) {
     super(client, mailName);
     const hash = hashSync(passworders, 12);
     if (!this.validateEmail(mailName.toLowerCase()))
-      throw new Error("Invalid email given");
+      throw new Error(ExceptionMessage.invalidEmail);
     this.password = hash;
     return this;
   }
@@ -21,7 +22,7 @@ export class SubmitUser extends PrimitiveUser {
   }
   public async submitUser(): Promise<void> {
     if ((await this.checkUserExists(this.email)) !== null)
-      throw new Error("User already exists");
+      throw new Error(ExceptionMessage.invalidUserExists);
     else {
       await this.client.collection("Accounts").insertOne({
         uuid: uuidv4(),

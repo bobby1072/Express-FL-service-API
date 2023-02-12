@@ -2,6 +2,7 @@ import { Db } from "mongodb";
 import { PrimitiveUser } from "./PrimitiveUser";
 import { compareSync } from "bcryptjs";
 import { Token } from "../Utils/TokenClass";
+import { ExceptionMessage } from "../Utils/ExceptionMessages";
 export interface ITokenAccountObj {
   email: string;
   id: string;
@@ -16,7 +17,7 @@ export class LoginUser extends PrimitiveUser {
   }
   public async login(): Promise<null | ITokenAccountObj> {
     const account = await this.checkUserExists(this.email);
-    if (!account) throw new Error("User doesn't Exist");
+    if (!account) throw new Error(ExceptionMessage.invalidUser);
     if (compareSync(this.password, account.password))
       return {
         email: account.email,
@@ -27,7 +28,7 @@ export class LoginUser extends PrimitiveUser {
   }
   public async deleteUser(): Promise<void> {
     if ((await this.login()) === null)
-      throw new Error("User doesn't exist or password incorrect");
+      throw new Error(ExceptionMessage.invalidPassword);
     else {
       await this.client
         .collection("catch")

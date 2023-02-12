@@ -1,3 +1,4 @@
+import { ExceptionMessage } from "../Utils/ExceptionMessages";
 import { IGeoJson } from "./FishLogClass";
 import { PrimitiveFish } from "./PrimitiveFish";
 export interface IGeoJsonWithRecordId extends IGeoJson {
@@ -31,7 +32,7 @@ class FishLoadOperations extends PrimitiveFish {
   }
   public async getCatches(options?: any): Promise<IGeoJsonWithRecordId[]> {
     if (options && !this.validateOptions(options))
-      throw new Error("Please give valid search options");
+      throw new Error(ExceptionMessage.invalidSearchOptions);
     return this.sortResult(
       await this.client
         .collection("catch")
