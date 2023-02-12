@@ -158,7 +158,7 @@ abstract class Program {
               let message = "Internal server error";
               if (e instanceof FishOpErrors) {
                 message = e.message;
-                if (e.similarFish) {
+                if (e.similarFish && e.similarFish.length > 0) {
                   resp.status(500);
                   resp.send(
                     `${message}. Did you mean ${e.similarFish
@@ -166,10 +166,9 @@ abstract class Program {
                       .join(" or ")}`
                   );
                 }
-              } else {
-                resp.status(500);
-                resp.send(message);
               }
+              resp.status(500);
+              resp.send(message);
             }
           } catch (e) {
             resp.status(498);
