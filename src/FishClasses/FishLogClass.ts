@@ -1,8 +1,9 @@
 import { Db } from "mongodb";
 import { IPullCatchReqBody } from "..";
+import { AllFishOperations } from "../Utils/AllFishSearch";
 import allFish from "./allFish.json";
 import { PrimitiveFish } from "./PrimitiveFish";
-interface Ifish {
+export interface Ifish {
   scientific_name: string;
   taxocode: string;
   a3_code: string;
@@ -25,6 +26,13 @@ export interface IGeoJson {
   geometry: Geometry;
   properties: Properties;
 }
+export class FishOpErrors extends Error {
+  public readonly similarFish?: Ifish[];
+  public constructor(message: string, similarFish?: Ifish[]) {
+    super(message);
+    similarFish ? (this.similarFish = similarFish) : null;
+  }
+}
 export class FishLogOperations extends PrimitiveFish {
   public readonly species: string;
   public readonly weight: number;
@@ -35,16 +43,23 @@ export class FishLogOperations extends PrimitiveFish {
   private readonly fishData: Ifish[] = allFish;
   constructor(username: string, catchObj: any, mongoClient: Db) {
     super(mongoClient, username);
-    if (!Number(catchObj.Weight)) throw new Error("Invalid weight given");
-    if (!Number(catchObj.Latitude)) throw new Error("Invalid latitude given");
-    if (!Number(catchObj.Longitude)) throw new Error("Invalid longitude given");
-    if (!this.isValidCatchBody(catchObj)) throw new Error("Invalid body given");
+    if (!this.isValidCatchBody(catchObj))
+      throw new FishOpErrors("Invalid body given");
+    if (!Number(catchObj.Weight))
+      throw new FishOpErrors("Invalid weight given");
+    if (!Number(catchObj.Latitude))
+      throw new FishOpErrors("Invalid latitude given");
+    if (!Number(catchObj.Longitude))
+      throw new FishOpErrors("Invalid longitude given");
     if (!this.isValidDate(catchObj.Date.slice(0, 10)))
-      throw new Error("Invalid date given");
+      throw new FishOpErrors("Invalid date given");
     if (!this.isValidSpecies(catchObj.Species))
-      throw new Error("Invalid species given");
+      throw new FishOpErrors(
+        "Invalid species given",
+        AllFishOperations.FindSimilarFish(catchObj.Species)
+      );
     if (!this.isValidSeason(catchObj.Season))
-      throw new Error("Invalid Season given");
+      throw new FishOpErrors("Invalid Season given");
     this.species = catchObj.Species;
     this.weight = catchObj.Weight;
     this.latitude = catchObj.Latitude;
@@ -78,7 +93,9 @@ export class FishLogOperations extends PrimitiveFish {
         );
       }
     );
-    if (!foundFish) valid = false;
+    if (!foundFish) {
+      valid = false;
+    }
     return valid;
   }
   private isValidCatchBody(catchObj: any): catchObj is IPullCatchReqBody {

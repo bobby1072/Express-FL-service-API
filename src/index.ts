@@ -8,7 +8,12 @@ import { Token } from "./Utils/TokenClass";
 import { Db } from "mongodb";
 import FishLoadOperations from "./FishClasses/FishLoadClass";
 import compression from "compression";
-import { FishLogOperations } from "./FishClasses/FishLogClass";
+import {
+  FishLogOperations,
+  FishOpErrors,
+  Ifish,
+} from "./FishClasses/FishLogClass";
+import { AllFishOperations } from "./Utils/AllFishSearch";
 export interface IPullCatchReqBody {
   Species: string;
   Weight: number;
@@ -151,9 +156,20 @@ abstract class Program {
               resp.send("Catch submitted.");
             } catch (e) {
               let message = "Internal server error";
-              if (e instanceof Error) message = e.message;
-              resp.status(500);
-              resp.send(message);
+              if (e instanceof FishOpErrors) {
+                message = e.message;
+                if (e.similarFish) {
+                  resp.status(500);
+                  resp.send(
+                    `${message}. Did you mean ${e.similarFish
+                      .map((ele: Ifish, index: number) => ele.english_name)
+                      .join(" or ")}`
+                  );
+                }
+              } else {
+                resp.status(500);
+                resp.send(message);
+              }
             }
           } catch (e) {
             resp.status(498);
