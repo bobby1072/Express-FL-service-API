@@ -1,13 +1,12 @@
 import * as dotenv from "dotenv";
-export class ConfigVars {
-  public readonly FISHLOGSK: string;
-  public readonly MONGODB_URI: string;
-  constructor() {
+
+export abstract class ConfigVars {
+  private static getVars(varKey: string): string {
     dotenv.config();
-    if (!process.env.FISHLOGSK || !process.env.MONGODB_URI)
-      throw new Error("Not all env vars present");
-    this.FISHLOGSK = process.env.FISHLOGSK;
-    this.MONGODB_URI = process.env.MONGODB_URI;
-    return this;
+    const enVariable = process.env[`${varKey}`];
+    if (!enVariable) throw new Error("Not all env vars present");
+    return enVariable;
   }
+  public static FISHLOGSK: string = ConfigVars.getVars("FISHLOGSK");
+  public static MONGODB_URI: string = ConfigVars.getVars("MONGODB_URI");
 }

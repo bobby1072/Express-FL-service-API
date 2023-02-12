@@ -1,17 +1,11 @@
 import { ConfigVars } from "./config-vars";
 import { Db, MongoClient } from "mongodb";
-export class MongoConnector {
-  private readonly configs: ConfigVars;
-  public readonly client: MongoClient;
-  constructor(configVarObject: ConfigVars) {
-    this.configs = configVarObject;
-    this.client = new MongoClient(this.configs.MONGODB_URI);
-    return this;
-  }
-  public async connectToMongo(): Promise<Db> {
+export abstract class MongoConnector {
+  private static client: MongoClient = new MongoClient(ConfigVars.MONGODB_URI);
+  public static async connectToMongo(): Promise<Db> {
     try {
-      await this.client.connect();
-      return this.client.db("fish_base");
+      await MongoConnector.client.connect();
+      return MongoConnector.client.db("fish_base");
     } catch (error) {
       throw new Error(`Connection to mongo failed`);
     }
