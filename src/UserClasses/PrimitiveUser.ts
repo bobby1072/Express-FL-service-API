@@ -6,8 +6,8 @@ export interface IUserMongoDB {
   uuid: string;
 }
 export abstract class PrimitiveUser {
-  public readonly client: Db;
-  public readonly email: string;
+  protected readonly client: Db;
+  protected readonly email: string;
   constructor(mongoClient: Db, mail: string) {
     this.client = mongoClient;
     this.email = mail.toLowerCase();

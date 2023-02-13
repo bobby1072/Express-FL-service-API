@@ -9,11 +9,19 @@ export interface ITokenAccountObj {
   token: string;
 }
 export class LoginUser extends PrimitiveUser {
-  public readonly password: string;
+  private readonly password: string;
   constructor(mail: string, pass: string, mongoClient: Db) {
     super(mongoClient, mail);
     this.password = pass;
-    return this;
+  }
+  public async updatePassword(newPassword: string): Promise<void> {
+    if ((await this.login()) === null) {
+      throw new Error(ExceptionMessage.invalidPassword);
+    } else {
+      await this.client
+        .collection("Accounts")
+        .updateOne({ email: this.email }, { $set: { password: newPassword } });
+    }
   }
   public async login(): Promise<null | ITokenAccountObj> {
     const account = await this.checkUserExists(this.email);

@@ -35,12 +35,12 @@ export class FishOpErrors extends Error {
   }
 }
 export class FishLogOperations extends PrimitiveFish {
-  public readonly species: string;
-  public readonly weight: number;
-  public readonly latitude: number;
-  public readonly longitude: number;
-  public readonly Season: "Summer" | "Winter" | "Autumn" | "Spring";
-  public readonly date: string;
+  private readonly species: string;
+  private readonly weight: number;
+  private readonly latitude: number;
+  private readonly longitude: number;
+  private readonly Season: "Summer" | "Winter" | "Autumn" | "Spring";
+  private readonly date: string;
   private readonly fishData: Ifish[] = allFish;
   constructor(username: string, catchObj: any, mongoClient: Db) {
     super(mongoClient, username);

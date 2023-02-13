@@ -78,6 +78,40 @@ abstract class Program {
           }
         }
       });
+      app.post("/changepassword", async (req: Request, resp: Response) => {
+        if (
+          !req.headers.authorization ||
+          !req.body.password ||
+          !req.body.new_password
+        ) {
+          resp.status(422);
+          resp.send("No token/password included");
+        } else {
+          const token: string = req.headers.authorization;
+          const password: string = req.body.password;
+          const newPassword: string = req.body.new_password;
+          try {
+            const tokenDetails = Token.decodeToken(token);
+            try {
+              await new LoginUser(
+                tokenDetails.user,
+                password,
+                client
+              ).updatePassword(newPassword);
+              resp.status(200);
+              resp.send("Password changed");
+            } catch (e) {
+              let message = ExceptionMessage.internalServerError;
+              if (e instanceof Error) message = e.message;
+              resp.status(500);
+              resp.send(message);
+            }
+          } catch (e) {
+            resp.status(498);
+            resp.send("Bad token given");
+          }
+        }
+      });
       app.post("/deleteaccount", async (req: Request, resp: Response) => {
         if (!req.headers.authorization || !req.body.password) {
           resp.status(422);
