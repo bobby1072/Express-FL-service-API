@@ -14,6 +14,7 @@ import {
   Ifish,
 } from "./FishClasses/FishLogClass";
 import { ExceptionMessage } from "./Utils/ExceptionMessages";
+import { Routes } from "./Utils/Routes";
 export interface IPullCatchReqBody {
   Species: string;
   Weight: number;
@@ -23,62 +24,17 @@ export interface IPullCatchReqBody {
   Date: string;
 }
 abstract class Program {
+  private static readonly app: Application = express();
   public static async main(): Promise<void> {
     try {
-      const app: Application = express();
-      app.use(compression());
-      app.use(cors());
-      app.use(bodyParser.urlencoded({ extended: true }));
-      app.use(bodyParser.json());
+      this.app.use(compression());
+      this.app.use(cors());
+      this.app.use(bodyParser.urlencoded({ extended: true }));
+      this.app.use(bodyParser.json());
       const client: Db = await MongoConnector.connectToMongo();
-      app.post("/register", async (req: Request, resp: Response) => {
-        if (!req.body.email || !req.body.password) {
-          resp.status(422);
-          resp.send("Email or password not given");
-        } else {
-          const email: string = req.body.email;
-          const pass: string = req.body.password;
-          try {
-            await new SubmitUser(email, pass, client).submitUser();
-            resp.status(200);
-            resp.send("Account created");
-          } catch (e) {
-            let message = ExceptionMessage.internalServerError;
-            if (e instanceof Error) message = e.message;
-            resp.status(500);
-            resp.send(message);
-          }
-        }
-      });
-      app.post("/login", async (req: Request, resp: Response) => {
-        if (!req.body.email || !req.body.password) {
-          resp.status(422);
-          resp.send("Email or password not given");
-        } else {
-          const email: string = req.body.email;
-          const pass: string = req.body.password;
-          try {
-            const token: ITokenAccountObj | null = await new LoginUser(
-              email,
-              pass,
-              client
-            ).login();
-            if (token) {
-              resp.status(200);
-              resp.send(token);
-            } else {
-              resp.status(500);
-              resp.send("Password inncorect");
-            }
-          } catch (e) {
-            let message = ExceptionMessage.internalServerError;
-            if (e instanceof Error) message = e.message;
-            resp.status(500);
-            resp.send(message);
-          }
-        }
-      });
-      app.post("/changepassword", async (req: Request, resp: Response) => {
+      Routes.register(this.app, client);
+      Routes.login(this.app, client);
+      this.app.post("/changepassword", async (req: Request, resp: Response) => {
         if (
           !req.headers.authorization ||
           !req.body.password ||
@@ -112,7 +68,7 @@ abstract class Program {
           }
         }
       });
-      app.post("/deleteaccount", async (req: Request, resp: Response) => {
+      this.app.post("/deleteaccount", async (req: Request, resp: Response) => {
         if (!req.headers.authorization || !req.body.password) {
           resp.status(422);
           resp.send("No token/password included");
@@ -141,7 +97,7 @@ abstract class Program {
           }
         }
       });
-      app.post("/pullcatches", async (req: Request, resp: Response) => {
+      this.app.post("/pullcatches", async (req: Request, resp: Response) => {
         if (!req.headers.authorization) {
           resp.status(498);
           resp.send("No token included");
@@ -172,7 +128,7 @@ abstract class Program {
           }
         }
       });
-      app.post("/postcatch", async (req: Request, resp: Response) => {
+      this.app.post("/postcatch", async (req: Request, resp: Response) => {
         if (!req.headers.authorization) {
           resp.status(498);
           resp.send("No token included");
@@ -210,7 +166,7 @@ abstract class Program {
           }
         }
       });
-      app.post("/deletecatches", async (req: Request, resp: Response) => {
+      this.app.post("/deletecatches", async (req: Request, resp: Response) => {
         if (!req.headers.authorization) {
           resp.status(498);
           resp.send("No token included");
@@ -250,7 +206,7 @@ abstract class Program {
         }
       });
       const portVar: number = Number(process.env.PORT) || 5000;
-      app.listen(portVar, "0.0.0.0", () =>
+      this.app.listen(portVar, "0.0.0.0", () =>
         console.log(`\n\nServer running on port: ${portVar}\n\n`)
       );
     } catch (e) {}

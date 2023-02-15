@@ -1,11 +1,21 @@
 import { Ifish } from "../FishClasses/FishLogClass";
-import allFish from "../FishClasses/allFish.json";
+import allFish from "./allFish.json";
 export abstract class AllFishOperations {
   private static readonly allFishData: Ifish[] = allFish;
-  public static FindSimilarFish(fishName: string): Ifish[] | undefined {
+  public static checkFishMatch(speciesName: string): Ifish | undefined {
+    return this.allFishData.find((fishEle: Ifish) => {
+      return (
+        fishEle.english_name.toLowerCase() === speciesName.toLowerCase() ||
+        fishEle.scientific_name.toLowerCase() === speciesName.toLowerCase()
+      );
+    });
+  }
+  public static findSimilarFish(fishName: string): Ifish[] | undefined {
     const fishEles: Ifish[] | undefined = this.allFishData.filter(
       (element: Ifish) => {
-        return element.english_name.includes(fishName);
+        return element.english_name
+          .toLowerCase()
+          .includes(fishName.toLowerCase());
       }
     );
     return fishEles
