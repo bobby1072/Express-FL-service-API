@@ -2,7 +2,6 @@ import { Db } from "mongodb";
 import { IPullCatchReqBody } from "..";
 import { AllFishOperations } from "../Utils/AllFishSearch";
 import { ExceptionMessage } from "../Utils/ExceptionMessages";
-import allFish from "./allFish.json";
 import { PrimitiveFish } from "./PrimitiveFish";
 export interface Ifish {
   scientific_name: string;
@@ -35,13 +34,12 @@ export class FishOpErrors extends Error {
   }
 }
 export class FishLogOperations extends PrimitiveFish {
-  public readonly species: string;
-  public readonly weight: number;
-  public readonly latitude: number;
-  public readonly longitude: number;
-  public readonly Season: "Summer" | "Winter" | "Autumn" | "Spring";
-  public readonly date: string;
-  private readonly fishData: Ifish[] = allFish;
+  private readonly species: string;
+  private readonly weight: number;
+  private readonly latitude: number;
+  private readonly longitude: number;
+  private readonly Season: "Summer" | "Winter" | "Autumn" | "Spring";
+  private readonly date: string;
   constructor(username: string, catchObj: any, mongoClient: Db) {
     super(mongoClient, username);
     if (!this.isValidCatchBody(catchObj))
@@ -57,7 +55,7 @@ export class FishLogOperations extends PrimitiveFish {
     if (!this.isValidSpecies(catchObj.Species))
       throw new FishOpErrors(
         ExceptionMessage.invalidSpecies,
-        AllFishOperations.FindSimilarFish(catchObj.Species)
+        AllFishOperations.findSimilarFish(catchObj.Species)
       );
     if (!this.isValidSeason(catchObj.Season))
       throw new FishOpErrors(ExceptionMessage.invalidSeason);
@@ -86,14 +84,8 @@ export class FishLogOperations extends PrimitiveFish {
       if (!alphabet.includes(ele) && !capitalAlphabet.includes(ele))
         valid = false;
     });
-    const foundFish: Ifish | undefined = this.fishData.find(
-      (fishEle: Ifish) => {
-        return (
-          fishEle.english_name.toLowerCase() === speciesName.toLowerCase() ||
-          fishEle.scientific_name.toLowerCase() === speciesName.toLowerCase()
-        );
-      }
-    );
+    const foundFish: Ifish | undefined =
+      AllFishOperations.checkFishMatch(speciesName);
     if (!foundFish) {
       valid = false;
     }

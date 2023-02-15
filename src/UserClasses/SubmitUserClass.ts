@@ -1,17 +1,16 @@
 import { PrimitiveUser } from "./PrimitiveUser";
 import { Db } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
-import { hashSync } from "bcryptjs";
 import { ExceptionMessage } from "../Utils/ExceptionMessages";
+import { PasswordHash } from "../Utils/PasswordHash";
 export class SubmitUser extends PrimitiveUser {
-  public readonly password: string;
+  private readonly password: string;
   constructor(mailName: string, passworders: string, client: Db) {
     super(client, mailName);
-    const hash = hashSync(passworders, 12);
     if (!this.validateEmail(mailName.toLowerCase()))
       throw new Error(ExceptionMessage.invalidEmail);
+    const hash = PasswordHash.hashPassword(passworders);
     this.password = hash;
-    return this;
   }
   private validateEmail(email: string) {
     return email
