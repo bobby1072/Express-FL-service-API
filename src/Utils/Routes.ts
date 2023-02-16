@@ -8,7 +8,7 @@ import {
 } from "../FishClasses/FishLogClass";
 import { ITokenAccountObj, LoginUser } from "../UserClasses/LoginUserClass";
 import { SubmitUser } from "../UserClasses/SubmitUserClass";
-import { ExceptionMessage } from "./ExceptionMessages";
+import { ExceptionMessage } from "../Common/ExceptionMessages";
 import { Token } from "./TokenClass";
 
 export abstract class Routes {

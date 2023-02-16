@@ -1,15 +1,19 @@
 import { sign, verify } from "jsonwebtoken";
+import { UserPermissions } from "../Common/UserPermissionGroups";
+import { ITokenAccountObj } from "../UserClasses/LoginUserClass";
 import { ConfigVars } from "./config-vars";
-interface ITokenData {
+export interface ITokenData {
   user: string;
   iat: number;
   exp: number;
+  role: string;
 }
 export abstract class Token {
-  public static encodeToken(userName: string): string {
+  public static encodeToken(userName: string, permissionLevel: string): string {
     const jwt: string = sign(
       {
         user: userName,
+        role: permissionLevel,
       },
       ConfigVars.FISHLOGSK,
       { algorithm: "HS256", expiresIn: "1h" }

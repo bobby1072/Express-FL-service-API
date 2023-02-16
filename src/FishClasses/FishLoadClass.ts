@@ -1,4 +1,5 @@
-import { ExceptionMessage } from "../Utils/ExceptionMessages";
+import { Collections } from "../Common/CollectionNames";
+import { ExceptionMessage } from "../Common/ExceptionMessages";
 import { IGeoJson } from "./FishLogClass";
 import { PrimitiveFish } from "./PrimitiveFish";
 export interface IGeoJsonWithRecordId extends IGeoJson {
@@ -11,7 +12,7 @@ export interface IGetCatchesArgs {
   "properties.Date"?: string;
 }
 class FishLoadOperations extends PrimitiveFish {
-  private sortResult(geoJs: any) {
+  private sortResult(geoJs: any): IGeoJsonWithRecordId[] {
     let recordCount = 1;
     return geoJs.map((ele: any): IGeoJsonWithRecordId => {
       const newEle: any = ele;
@@ -35,7 +36,7 @@ class FishLoadOperations extends PrimitiveFish {
       throw new Error(ExceptionMessage.invalidSearchOptions);
     return this.sortResult(
       await this.client
-        .collection("catch")
+        .collection(Collections.catches)
         .find(options ? options : {})
         .toArray()
     );

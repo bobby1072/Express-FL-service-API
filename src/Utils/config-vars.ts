@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import { ExceptionMessage } from "./ExceptionMessages";
+import { ExceptionMessage } from "../Common/ExceptionMessages";
 
 export abstract class ConfigVars {
   private static getVars(varKey: string): string {

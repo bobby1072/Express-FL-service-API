@@ -1,8 +1,10 @@
 import { PrimitiveUser } from "./PrimitiveUser";
 import { Db } from "mongodb";
 import { v4 as uuidv4 } from "uuid";
-import { ExceptionMessage } from "../Utils/ExceptionMessages";
+import { ExceptionMessage } from "../Common/ExceptionMessages";
 import { PasswordHash } from "../Utils/PasswordHash";
+import { UserPermissions } from "../Common/UserPermissionGroups";
+import { Collections } from "../Common/CollectionNames";
 export class SubmitUser extends PrimitiveUser {
   private readonly password: string;
   constructor(mailName: string, passworders: string, client: Db) {
@@ -23,7 +25,8 @@ export class SubmitUser extends PrimitiveUser {
     if ((await this.checkUserExists(this.email)) !== null)
       throw new Error(ExceptionMessage.invalidUserExists);
     else {
-      await this.client.collection("Accounts").insertOne({
+      await this.client.collection(Collections.account).insertOne({
+        role: UserPermissions.standardUser,
         uuid: uuidv4(),
         email: this.email,
         password: this.password,

@@ -1,8 +1,9 @@
 import { Db } from "mongodb";
 import { PrimitiveUser } from "./PrimitiveUser";
 import { Token } from "../Utils/TokenClass";
-import { ExceptionMessage } from "../Utils/ExceptionMessages";
+import { ExceptionMessage } from "../Common/ExceptionMessages";
 import { PasswordHash } from "../Utils/PasswordHash";
+import { Collections } from "../Common/CollectionNames";
 export interface ITokenAccountObj {
   email: string;
   id: string;
@@ -21,7 +22,7 @@ export class LoginUser extends PrimitiveUser {
       return {
         email: account.email,
         id: account.uuid,
-        token: Token.encodeToken(account.email),
+        token: Token.encodeToken(account.email, account.role),
       };
     else return undefined;
   }
@@ -30,7 +31,7 @@ export class LoginUser extends PrimitiveUser {
       throw new Error(ExceptionMessage.invalidPassword);
     } else {
       await this.client
-        .collection("Accounts")
+        .collection(Collections.account)
         .updateOne(
           { email: this.email },
           { $set: { password: PasswordHash.hashPassword(newPassword) } }
@@ -42,9 +43,11 @@ export class LoginUser extends PrimitiveUser {
       throw new Error(ExceptionMessage.invalidPassword);
     else {
       await this.client
-        .collection("catch")
+        .collection(Collections.catches)
         .deleteMany({ "properties.Username": this.email });
-      await this.client.collection("Accounts").deleteOne({ email: this.email });
+      await this.client
+        .collection(Collections.account)
+        .deleteOne({ email: this.email });
     }
   }
 }
