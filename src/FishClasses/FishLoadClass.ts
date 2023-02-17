@@ -12,7 +12,7 @@ export interface IGetCatchesArgs {
   "properties.Date"?: string;
 }
 class FishLoadOperations extends PrimitiveFish {
-  private sortResult(geoJs: any): IGeoJsonWithRecordId[] {
+  private static sortResult(geoJs: any): IGeoJsonWithRecordId[] {
     let recordCount = 1;
     return geoJs.map((ele: any): IGeoJsonWithRecordId => {
       const newEle: any = ele;
@@ -34,7 +34,7 @@ class FishLoadOperations extends PrimitiveFish {
   public async getCatches(options?: any): Promise<IGeoJsonWithRecordId[]> {
     if (options && !this.validateOptions(options))
       throw new Error(ExceptionMessage.invalidSearchOptions);
-    return this.sortResult(
+    return FishLoadOperations.sortResult(
       await this.client
         .collection(Collections.catches)
         .find(options ? options : {})

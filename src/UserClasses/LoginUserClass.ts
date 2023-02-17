@@ -42,12 +42,14 @@ export class LoginUser extends PrimitiveUser {
     if (!(await this.login()))
       throw new Error(ExceptionMessage.invalidPassword);
     else {
-      await this.client
-        .collection(Collections.catches)
-        .deleteMany({ "properties.Username": this.email });
-      await this.client
-        .collection(Collections.account)
-        .deleteOne({ email: this.email });
+      await Promise.all([
+        this.client
+          .collection(Collections.catches)
+          .deleteMany({ "properties.Username": this.email }),
+        this.client
+          .collection(Collections.account)
+          .deleteOne({ email: this.email }),
+      ]);
     }
   }
 }

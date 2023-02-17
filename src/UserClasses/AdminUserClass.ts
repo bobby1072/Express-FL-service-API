@@ -1,40 +1,93 @@
 import { Db } from "mongodb";
 import { Collections } from "../Common/CollectionNames";
+import { ExceptionMessage } from "../Common/ExceptionMessages";
 import { UserPermissions } from "../Common/UserPermissionGroups";
-import { ITokenData } from "../Utils/TokenClass";
+import { LoginUser } from "./LoginUserClass";
 import { IUserMongoDB } from "./PrimitiveUser";
-export class AdminUser {
-  private readonly client: Db;
-  private static isUserAdmin(user: ITokenData): boolean {
-    if (user.role === UserPermissions.adminUser) {
+export class AdminUser extends LoginUser {
+  private readonly targetName: string;
+  constructor(
+    mail: string,
+    pass: string,
+    mongoClient: Db,
+    role: string,
+    target: string
+  ) {
+    super(mail, pass, mongoClient);
+    if (!AdminUser.isUserAdmin(role)) throw new Error("User is not admin");
+    this.targetName = target;
+  }
+  private static isUserAdmin(role: string): boolean {
+    if (role === UserPermissions.adminUser) {
       return true;
     } else return false;
   }
-  constructor(mongoClient: Db, user: ITokenData) {
-    const decodedToke = AdminUser.isUserAdmin(user);
-    if (!decodedToke) throw new Error("User is not admin");
-    this.client = mongoClient;
-  }
   public async pullBackAllUsers(): Promise<IUserMongoDB[]> {
-    const allUsers = await this.client
-      .collection(Collections.account)
-      .find({})
-      .toArray();
-    return allUsers.map((ele: any) => {
-      return ele as IUserMongoDB;
-    });
+    if (!(await this.login())) {
+      throw new Error(ExceptionMessage.invalidPassword);
+    } else {
+      const allUsers = await this.client
+        .collection(Collections.account)
+        .find({})
+        .toArray();
+      return allUsers.map((ele: any) => {
+        return ele as IUserMongoDB;
+      });
+    }
   }
-  public async deleteUser(username: string): Promise<void> {
-    await this.client
-      .collection(Collections.catches)
-      .deleteMany({ "properties.Username": username });
-    await this.client
-      .collection(Collections.account)
-      .deleteOne({ email: username });
+  public async deleteUserAdmin(): Promise<void> {
+    if (!(await this.login())) {
+      throw new Error(ExceptionMessage.invalidPassword);
+    } else {
+      await Promise.all([
+        this.client
+          .collection(Collections.catches)
+          .deleteMany({ "properties.Username": this.targetName }),
+        this.client
+          .collection(Collections.account)
+          .deleteOne({ email: this.targetName }),
+      ]);
+    }
   }
-  public async deleteAllUserCatches(username: string): Promise<void> {
-    await this.client
-      .collection(Collections.catches)
-      .deleteMany({ "properties.Username": username });
+  public async deleteAllUserCatchesAdmin(): Promise<void> {
+    if (!(await this.login())) {
+      throw new Error(ExceptionMessage.invalidPassword);
+    } else {
+      await this.client
+        .collection(Collections.catches)
+        .deleteMany({ "properties.Username": this.targetName });
+    }
+  }
+  public async updateUser(
+    option: "email" | "role" | "password",
+    newVal: string
+  ) {
+    if (!(await this.login())) {
+      throw new Error(ExceptionMessage.invalidPassword);
+    } else {
+      if (option === "email") {
+        await Promise.all([
+          this.client
+            .collection(Collections.catches)
+            .updateMany(
+              { "properties.Username": this.targetName },
+              { $set: { [option]: newVal } }
+            ),
+          this.client
+            .collection(Collections.account)
+            .updateOne(
+              { email: this.targetName },
+              { $set: { [option]: newVal } }
+            ),
+        ]);
+      } else {
+        await this.client
+          .collection(Collections.account)
+          .updateOne(
+            { email: this.targetName },
+            { $set: { [option]: newVal } }
+          );
+      }
+    }
   }
 }
