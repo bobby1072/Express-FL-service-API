@@ -1,5 +1,5 @@
 import { Application, Request, Response } from "express";
-import { Db } from "mongodb";
+import { Admin, Db } from "mongodb";
 import FishLoadOperations from "../FishClasses/FishLoadClass";
 import {
   FishLogOperations,
@@ -192,7 +192,7 @@ export abstract class Routes {
               client
             ).submitCatch();
             resp.status(200);
-            resp.send("Catch submitted.");
+            resp.send("Catch submitted");
           } catch (e) {
             let message = ExceptionMessage.internalServerError;
             if (e instanceof FishOpErrors) {
@@ -295,7 +295,7 @@ export abstract class Routes {
     });
   }
 
-  public static async deleteUserAdminWay(
+  public static async deleteUserAdmin(
     app: Application,
     client: Db
   ): Promise<void> {
@@ -303,12 +303,66 @@ export abstract class Routes {
       if (!req.headers.authorization || !req.body.password) {
         resp.status(422);
         resp.send("No token/password included");
+      } else if (!req.body.target) {
+        resp.status(422);
+        resp.send("No target included");
       } else {
         const token: string = req.headers.authorization;
         const password: string = req.body.password;
+        const target: string = req.body.target;
         try {
           const tokenDetails = Token.decodeToken(token);
           try {
+            await new AdminUser(
+              tokenDetails.user,
+              password,
+              client,
+              tokenDetails.role,
+              target
+            ).deleteUserAdmin();
+            resp.status(200);
+            resp.send("User deleted");
+          } catch (e) {
+            let message = ExceptionMessage.internalServerError;
+            if (e instanceof Error) message = e.message;
+            resp.status(500);
+            resp.send(message);
+          }
+        } catch (e) {
+          resp.status(498);
+          resp.send("Bad token given");
+        }
+      }
+    });
+  }
+
+  public static async deleteAllUserCatchesAdmin(
+    app: Application,
+    client: Db
+  ): Promise<void> {
+    app.post("/deleteUser", async (req: Request, resp: Response) => {
+      if (!req.headers.authorization || !req.body.password) {
+        resp.status(422);
+        resp.send("No token/password included");
+      } else if (!req.body.target) {
+        resp.status(422);
+        resp.send("No target included");
+      } else {
+        const token: string = req.headers.authorization;
+        const password: string = req.body.password;
+        const target: string = req.body.target;
+        try {
+          const tokenDetails = Token.decodeToken(token);
+          try {
+            await new AdminUser(
+              tokenDetails.user,
+              password,
+              client,
+              tokenDetails.role,
+              target
+            ).deleteAllUserCatchesAdmin();
+            resp.status(200);
+            resp.send("User deleted");
           } catch (e) {
             let message = ExceptionMessage.internalServerError;
             if (e instanceof Error) message = e.message;
