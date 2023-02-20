@@ -5,17 +5,18 @@ import { UserPermissions } from "../Common/UserPermissionGroups";
 import { LoginUser } from "./LoginUserClass";
 import { IUserMongoDB } from "./PrimitiveUser";
 export class AdminUser extends LoginUser {
-  private readonly targetName: string;
+  private readonly targetName?: string;
   constructor(
     mail: string,
     pass: string,
     mongoClient: Db,
     role: string,
-    target: string
+    target?: string
   ) {
     super(mail, pass, mongoClient);
-    if (!AdminUser.isUserAdmin(role)) throw new Error("User is not admin");
-    this.targetName = target;
+    if (!AdminUser.isUserAdmin(role))
+      throw new Error(ExceptionMessage.userNotAdmin);
+    if (target) this.targetName = target;
   }
   private static isUserAdmin(role: string): boolean {
     if (role === UserPermissions.adminUser) {
@@ -36,6 +37,7 @@ export class AdminUser extends LoginUser {
     }
   }
   public async deleteUserAdmin(): Promise<void> {
+    if (!this.targetName) throw new Error(ExceptionMessage.noTarget);
     if (!(await this.login())) {
       throw new Error(ExceptionMessage.invalidPassword);
     } else {
@@ -50,6 +52,7 @@ export class AdminUser extends LoginUser {
     }
   }
   public async deleteAllUserCatchesAdmin(): Promise<void> {
+    if (!this.targetName) throw new Error(ExceptionMessage.noTarget);
     if (!(await this.login())) {
       throw new Error(ExceptionMessage.invalidPassword);
     } else {
@@ -62,6 +65,7 @@ export class AdminUser extends LoginUser {
     option: "email" | "role" | "password",
     newVal: string
   ) {
+    if (!this.targetName) throw new Error(ExceptionMessage.noTarget);
     if (!(await this.login())) {
       throw new Error(ExceptionMessage.invalidPassword);
     } else {

@@ -10,6 +10,8 @@ import { ITokenAccountObj, LoginUser } from "../UserClasses/LoginUserClass";
 import { SubmitUser } from "../UserClasses/SubmitUserClass";
 import { ExceptionMessage } from "../Common/ExceptionMessages";
 import { Token } from "./TokenClass";
+import { AdminUser } from "../UserClasses/AdminUserClass";
+import { IUserMongoDB } from "../UserClasses/PrimitiveUser";
 
 export abstract class Routes {
   public static async register(app: Application, client: Db): Promise<void> {
@@ -243,6 +245,70 @@ export abstract class Routes {
             );
             resp.status(200);
             resp.send("Catches deleted");
+          } catch (e) {
+            let message = ExceptionMessage.internalServerError;
+            if (e instanceof Error) message = e.message;
+            resp.status(500);
+            resp.send(message);
+          }
+        } catch (e) {
+          resp.status(498);
+          resp.send("Bad token given");
+        }
+      }
+    });
+  }
+
+  public static async pullAllUserDetails(
+    app: Application,
+    client: Db
+  ): Promise<void> {
+    app.post("/pullallusers", async (req: Request, resp: Response) => {
+      if (!req.headers.authorization || !req.body.password) {
+        resp.status(422);
+        resp.send("No token/password included");
+      } else {
+        const token: string = req.headers.authorization;
+        const password: string = req.body.password;
+        try {
+          const tokenDetails = Token.decodeToken(token);
+          try {
+            const allUsers: IUserMongoDB[] = await new AdminUser(
+              tokenDetails.user,
+              password,
+              client,
+              tokenDetails.role
+            ).pullBackAllUsers();
+            resp.status(200);
+            resp.json(allUsers);
+          } catch (e) {
+            let message = ExceptionMessage.internalServerError;
+            if (e instanceof Error) message = e.message;
+            resp.status(500);
+            resp.send(message);
+          }
+        } catch (e) {
+          resp.status(498);
+          resp.send("Bad token given");
+        }
+      }
+    });
+  }
+
+  public static async deleteUserAdminWay(
+    app: Application,
+    client: Db
+  ): Promise<void> {
+    app.post("deleteuseradmin", async (req: Request, resp: Response) => {
+      if (!req.headers.authorization || !req.body.password) {
+        resp.status(422);
+        resp.send("No token/password included");
+      } else {
+        const token: string = req.headers.authorization;
+        const password: string = req.body.password;
+        try {
+          const tokenDetails = Token.decodeToken(token);
+          try {
           } catch (e) {
             let message = ExceptionMessage.internalServerError;
             if (e instanceof Error) message = e.message;
