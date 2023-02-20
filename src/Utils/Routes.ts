@@ -1,5 +1,5 @@
 import { Application, Request, Response } from "express";
-import { Admin, Db } from "mongodb";
+import { Db } from "mongodb";
 import FishLoadOperations from "../FishClasses/FishLoadClass";
 import {
   FishLogOperations,
@@ -340,7 +340,7 @@ export abstract class Routes {
     app: Application,
     client: Db
   ): Promise<void> {
-    app.post("/deleteUser", async (req: Request, resp: Response) => {
+    app.post("/deleteusercatches", async (req: Request, resp: Response) => {
       if (!req.headers.authorization || !req.body.password) {
         resp.status(422);
         resp.send("No token/password included");
@@ -363,6 +363,49 @@ export abstract class Routes {
             ).deleteAllUserCatchesAdmin();
             resp.status(200);
             resp.send("User deleted");
+          } catch (e) {
+            let message = ExceptionMessage.internalServerError;
+            if (e instanceof Error) message = e.message;
+            resp.status(500);
+            resp.send(message);
+          }
+        } catch (e) {
+          resp.status(498);
+          resp.send("Bad token given");
+        }
+      }
+    });
+  }
+
+  public static async updateUserAdmin(
+    app: Application,
+    client: Db
+  ): Promise<void> {
+    app.post("/updateuser", async (req: Request, resp: Response) => {
+      if (!req.headers.authorization || !req.body.password) {
+        resp.status(422);
+        resp.send("No token/password included");
+      } else if (!req.body.target || !req.body.new_value || !req.body.option) {
+        resp.status(422);
+        resp.send("No target/option/new_value included");
+      } else {
+        const token: string = req.headers.authorization;
+        const password: string = req.body.password;
+        const target: string = req.body.target;
+        const option: string = req.body.option;
+        const newValue: string = req.body.new_value;
+        try {
+          const tokenDetails = Token.decodeToken(token);
+          try {
+            await new AdminUser(
+              tokenDetails.user,
+              password,
+              client,
+              tokenDetails.role,
+              target
+            ).updateUser(option, newValue);
+            resp.status(200);
+            resp.send("User updated");
           } catch (e) {
             let message = ExceptionMessage.internalServerError;
             if (e instanceof Error) message = e.message;

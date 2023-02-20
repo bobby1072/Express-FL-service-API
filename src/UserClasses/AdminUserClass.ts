@@ -61,10 +61,9 @@ export class AdminUser extends LoginUser {
         .deleteMany({ "properties.Username": this.targetName });
     }
   }
-  public async updateUser(
-    option: "email" | "role" | "password",
-    newVal: string
-  ) {
+  public async updateUser(option: string, newVal: string) {
+    if (option !== "email" && option !== "role" && option !== "password")
+      throw new Error(ExceptionMessage.invalidOptions);
     if (!this.targetName) throw new Error(ExceptionMessage.noTarget);
     if (!(await this.login())) {
       throw new Error(ExceptionMessage.invalidPassword);
