@@ -31,6 +31,11 @@ abstract class Program {
       Routes.postCatch(Program.app, client);
       Routes.deleteCatch(Program.app, client);
 
+      Routes.updateUserAdmin(Program.app, client);
+      Routes.deleteAllUserCatchesAdmin(Program.app, client);
+      Routes.deleteUserAdmin(Program.app, client);
+      Routes.pullAllUserDetails(Program.app, client);
+
       const portVar: number = Number(process.env.PORT) || 5000;
       Program.app.listen(portVar, "0.0.0.0", () =>
         console.log(`\n\nServer running on port: ${portVar}\n\n`)

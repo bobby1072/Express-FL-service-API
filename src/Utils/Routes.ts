@@ -299,7 +299,7 @@ export abstract class Routes {
     app: Application,
     client: Db
   ): Promise<void> {
-    app.post("deleteuseradmin", async (req: Request, resp: Response) => {
+    app.post("/deleteuseradmin", async (req: Request, resp: Response) => {
       if (!req.headers.authorization || !req.body.password) {
         resp.status(422);
         resp.send("No token/password included");
@@ -362,7 +362,7 @@ export abstract class Routes {
               target
             ).deleteAllUserCatchesAdmin();
             resp.status(200);
-            resp.send("User deleted");
+            resp.send("User catches deleted");
           } catch (e) {
             let message = ExceptionMessage.internalServerError;
             if (e instanceof Error) message = e.message;

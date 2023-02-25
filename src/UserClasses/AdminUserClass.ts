@@ -74,7 +74,7 @@ export class AdminUser extends LoginUser {
             .collection(Collections.catches)
             .updateMany(
               { "properties.Username": this.targetName },
-              { $set: { [option]: newVal } }
+              { $set: { "properties.Username": newVal } }
             ),
           this.client
             .collection(Collections.account)
