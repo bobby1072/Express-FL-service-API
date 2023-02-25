@@ -1,8 +1,9 @@
 import { Db } from "mongodb";
 import { IPullCatchReqBody } from "..";
 import { AllFishOperations } from "../Utils/AllFishSearch";
-import { ExceptionMessage } from "../Utils/ExceptionMessages";
+import { ExceptionMessage } from "../Common/ExceptionMessages";
 import { PrimitiveFish } from "./PrimitiveFish";
+import { Collections } from "../Common/CollectionNames";
 export interface Ifish {
   scientific_name: string;
   taxocode: string;
@@ -42,7 +43,7 @@ export class FishLogOperations extends PrimitiveFish {
   private readonly date: string;
   constructor(username: string, catchObj: any, mongoClient: Db) {
     super(mongoClient, username);
-    if (!this.isValidCatchBody(catchObj))
+    if (!FishLogOperations.isValidCatchBody(catchObj))
       throw new FishOpErrors(ExceptionMessage.invalidBody);
     if (!Number(catchObj.Weight))
       throw new FishOpErrors(ExceptionMessage.invalidWeight);
@@ -50,14 +51,14 @@ export class FishLogOperations extends PrimitiveFish {
       throw new FishOpErrors(ExceptionMessage.invalidLatitude);
     if (!Number(catchObj.Longitude))
       throw new FishOpErrors(ExceptionMessage.invalidLongitude);
-    if (!this.isValidDate(catchObj.Date.slice(0, 10)))
+    if (!FishLogOperations.isValidDate(catchObj.Date.slice(0, 10)))
       throw new FishOpErrors(ExceptionMessage.invalidDate);
-    if (!this.isValidSpecies(catchObj.Species))
+    if (!FishLogOperations.isValidSpecies(catchObj.Species))
       throw new FishOpErrors(
         ExceptionMessage.invalidSpecies,
         AllFishOperations.findSimilarFish(catchObj.Species)
       );
-    if (!this.isValidSeason(catchObj.Season))
+    if (!FishLogOperations.isValidSeason(catchObj.Season))
       throw new FishOpErrors(ExceptionMessage.invalidSeason);
     this.species = catchObj.Species;
     this.weight = catchObj.Weight;
@@ -66,7 +67,7 @@ export class FishLogOperations extends PrimitiveFish {
     this.date = new Date(catchObj.Date).toISOString().slice(0, 10);
     this.Season = catchObj.Season as "Summer" | "Winter" | "Autumn" | "Spring";
   }
-  private isValidSeason(seas: string): boolean {
+  private static isValidSeason(seas: string): boolean {
     if (
       seas === "Summer" ||
       seas === "Winter" ||
@@ -76,7 +77,7 @@ export class FishLogOperations extends PrimitiveFish {
       return true;
     else return false;
   }
-  private isValidSpecies(speciesName: string): boolean {
+  private static isValidSpecies(speciesName: string): boolean {
     const alphabet = "abcdefghijklmnopqrstuvwxyz ";
     const capitalAlphabet = alphabet.toUpperCase();
     let valid = true;
@@ -91,7 +92,9 @@ export class FishLogOperations extends PrimitiveFish {
     }
     return valid;
   }
-  private isValidCatchBody(catchObj: any): catchObj is IPullCatchReqBody {
+  private static isValidCatchBody(
+    catchObj: any
+  ): catchObj is IPullCatchReqBody {
     return (
       "Species" in catchObj &&
       "Weight" in catchObj &&
@@ -101,7 +104,7 @@ export class FishLogOperations extends PrimitiveFish {
       "Date" in catchObj
     );
   }
-  private isValidDate(dateString: string): boolean {
+  private static isValidDate(dateString: string): boolean {
     var regEx = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateString.match(regEx)) return false;
     var d = new Date(dateString);
@@ -126,9 +129,13 @@ export class FishLogOperations extends PrimitiveFish {
     };
   }
   public async submitCatch(): Promise<void> {
-    await this.client.collection("catch").insertOne(this.createJson());
+    await this.client
+      .collection(Collections.catches)
+      .insertOne(this.createJson());
   }
   public async deleteCatch(): Promise<void> {
-    await this.client.collection("catch").deleteOne(this.createJson());
+    await this.client
+      .collection(Collections.catches)
+      .deleteOne(this.createJson());
   }
 }

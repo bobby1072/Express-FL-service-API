@@ -20,4 +20,7 @@ export abstract class ExceptionMessage {
   public static readonly invalidMongoConnection: string =
     "Connection to mongo failed";
   public static readonly invalidUserExists: string = "User already exists";
+  public static readonly userNotAdmin: string = "User is not admin";
+  public static readonly noTarget: string = "No target given";
+  public static readonly invalidOptions: string = "The options given not valid";
 }

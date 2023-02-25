@@ -1,5 +1,5 @@
 import { Ifish } from "../FishClasses/FishLogClass";
-import allFish from "./allFish.json";
+import allFish from "../Common/allFish.json";
 export abstract class AllFishOperations {
   private static readonly allFishData: Ifish[] = allFish;
   public static checkFishMatch(speciesName: string): Ifish | undefined {

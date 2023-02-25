@@ -8,8 +8,10 @@ import {
 } from "../FishClasses/FishLogClass";
 import { ITokenAccountObj, LoginUser } from "../UserClasses/LoginUserClass";
 import { SubmitUser } from "../UserClasses/SubmitUserClass";
-import { ExceptionMessage } from "./ExceptionMessages";
+import { ExceptionMessage } from "../Common/ExceptionMessages";
 import { Token } from "./TokenClass";
+import { AdminUser } from "../UserClasses/AdminUserClass";
+import { IUserMongoDB } from "../UserClasses/PrimitiveUser";
 
 export abstract class Routes {
   public static async register(app: Application, client: Db): Promise<void> {
@@ -190,7 +192,7 @@ export abstract class Routes {
               client
             ).submitCatch();
             resp.status(200);
-            resp.send("Catch submitted.");
+            resp.send("Catch submitted");
           } catch (e) {
             let message = ExceptionMessage.internalServerError;
             if (e instanceof FishOpErrors) {
@@ -243,6 +245,167 @@ export abstract class Routes {
             );
             resp.status(200);
             resp.send("Catches deleted");
+          } catch (e) {
+            let message = ExceptionMessage.internalServerError;
+            if (e instanceof Error) message = e.message;
+            resp.status(500);
+            resp.send(message);
+          }
+        } catch (e) {
+          resp.status(498);
+          resp.send("Bad token given");
+        }
+      }
+    });
+  }
+
+  public static async pullAllUserDetails(
+    app: Application,
+    client: Db
+  ): Promise<void> {
+    app.post("/pullallusers", async (req: Request, resp: Response) => {
+      if (!req.headers.authorization || !req.body.password) {
+        resp.status(422);
+        resp.send("No token/password included");
+      } else {
+        const token: string = req.headers.authorization;
+        const password: string = req.body.password;
+        try {
+          const tokenDetails = Token.decodeToken(token);
+          try {
+            const allUsers: IUserMongoDB[] = await new AdminUser(
+              tokenDetails.user,
+              password,
+              client,
+              tokenDetails.role
+            ).pullBackAllUsers();
+            resp.status(200);
+            resp.json(allUsers);
+          } catch (e) {
+            let message = ExceptionMessage.internalServerError;
+            if (e instanceof Error) message = e.message;
+            resp.status(500);
+            resp.send(message);
+          }
+        } catch (e) {
+          resp.status(498);
+          resp.send("Bad token given");
+        }
+      }
+    });
+  }
+
+  public static async deleteUserAdmin(
+    app: Application,
+    client: Db
+  ): Promise<void> {
+    app.post("/deleteuseradmin", async (req: Request, resp: Response) => {
+      if (!req.headers.authorization || !req.body.password) {
+        resp.status(422);
+        resp.send("No token/password included");
+      } else if (!req.body.target) {
+        resp.status(422);
+        resp.send("No target included");
+      } else {
+        const token: string = req.headers.authorization;
+        const password: string = req.body.password;
+        const target: string = req.body.target;
+        try {
+          const tokenDetails = Token.decodeToken(token);
+          try {
+            await new AdminUser(
+              tokenDetails.user,
+              password,
+              client,
+              tokenDetails.role,
+              target
+            ).deleteUserAdmin();
+            resp.status(200);
+            resp.send("User deleted");
+          } catch (e) {
+            let message = ExceptionMessage.internalServerError;
+            if (e instanceof Error) message = e.message;
+            resp.status(500);
+            resp.send(message);
+          }
+        } catch (e) {
+          resp.status(498);
+          resp.send("Bad token given");
+        }
+      }
+    });
+  }
+
+  public static async deleteAllUserCatchesAdmin(
+    app: Application,
+    client: Db
+  ): Promise<void> {
+    app.post("/deleteusercatches", async (req: Request, resp: Response) => {
+      if (!req.headers.authorization || !req.body.password) {
+        resp.status(422);
+        resp.send("No token/password included");
+      } else if (!req.body.target) {
+        resp.status(422);
+        resp.send("No target included");
+      } else {
+        const token: string = req.headers.authorization;
+        const password: string = req.body.password;
+        const target: string = req.body.target;
+        try {
+          const tokenDetails = Token.decodeToken(token);
+          try {
+            await new AdminUser(
+              tokenDetails.user,
+              password,
+              client,
+              tokenDetails.role,
+              target
+            ).deleteAllUserCatchesAdmin();
+            resp.status(200);
+            resp.send("User catches deleted");
+          } catch (e) {
+            let message = ExceptionMessage.internalServerError;
+            if (e instanceof Error) message = e.message;
+            resp.status(500);
+            resp.send(message);
+          }
+        } catch (e) {
+          resp.status(498);
+          resp.send("Bad token given");
+        }
+      }
+    });
+  }
+
+  public static async updateUserAdmin(
+    app: Application,
+    client: Db
+  ): Promise<void> {
+    app.post("/updateuser", async (req: Request, resp: Response) => {
+      if (!req.headers.authorization || !req.body.password) {
+        resp.status(422);
+        resp.send("No token/password included");
+      } else if (!req.body.target || !req.body.new_value || !req.body.option) {
+        resp.status(422);
+        resp.send("No target/option/new_value included");
+      } else {
+        const token: string = req.headers.authorization;
+        const password: string = req.body.password;
+        const target: string = req.body.target;
+        const option: string = req.body.option;
+        const newValue: string = req.body.new_value;
+        try {
+          const tokenDetails = Token.decodeToken(token);
+          try {
+            await new AdminUser(
+              tokenDetails.user,
+              password,
+              client,
+              tokenDetails.role,
+              target
+            ).updateUser(option, newValue);
+            resp.status(200);
+            resp.send("User updated");
           } catch (e) {
             let message = ExceptionMessage.internalServerError;
             if (e instanceof Error) message = e.message;

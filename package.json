@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build-start": "npm run build && npm start",
+    "debug:start": "set DEBUG=express:* & node build/index.js",
     "start": "node build/index.js",
     "prettier-format": "prettier --config .prettierrc ./src/*.ts --write",
     "build": "tsc",
